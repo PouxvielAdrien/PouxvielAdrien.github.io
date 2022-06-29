@@ -1,0 +1,14 @@
+:root {
+   --color1: #3C429E;
+}
+
+
+
+body {
+    background-color: lighten(color1, 10%);
+    background-color: var(--color1);
+}
+
+.card {
+    border-radius: 20px;
+}

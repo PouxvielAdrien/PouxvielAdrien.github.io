@@ -1,0 +1,73 @@
+<!-- WEATHER FORECAST (CITY) -->
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-8">
+            <!-- Form to get data from the user -->
+            <!-- Data Collected : Latitude and Longitude -->
+            <form [formGroup]="forecastForm" (ngSubmit)="ShowForecast()" class="card card-1 m-3">
+                <div class="row justify-content-center">
+                    <div class="col-8">
+                        <div class="input-group m-2">
+                            <span class="input-group-text" id="inputGroup-sizing-default">City Name</span>
+                            <input id="city" name="city" class="form-control" type="text" formControlName="forecastCity"
+                                required />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Data Collected : Unit -->
+                <div class="row justify-content-center m-1">
+                    <div class="col-3 ">
+                        <div class="form-floating">
+                            <select id="units" class="form-select" name="units" formControlName="forecastUnit"
+                                id="floatingUnit" required>
+                                <option> metric </option>
+                                <option> imperial </option>
+                            </select>
+                            <label for="floatingUnit">Unit</label>
+                        </div>
+                    </div>
+
+                    <!-- Data Collected : Langage (default = English) but not really useful because the display does not include language differences  -->
+                    <div class="col-3 ">
+                        <div class="form-floating">
+                            <select id="langage" class="form-select" name="langage" formControlName="forecastLang"
+                                id="floatingLang">
+                                <option> en </option>
+                                <option> fr </option>
+                            </select>
+                            <label for="floatingLang">Langage</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Button to submit Data and allow the display of the weather forecast -->
+                <div class="row justify-content-center">
+                    <div class="col-1 m-2">
+                        <button type="submit" class="btn btn-primary bg-primary" [disabled]="forecastForm.invalid">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                class="bi bi-search" viewBox="0 0 16 16">
+                                <path
+                                    d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Data display : Date, Weather Icon, Max and Min Temperature -->
+    <div class="row">
+        <div class="col card m-2" *ngFor="let Day of DataFor, let i = index;">
+            <div class="card-block m-1">
+                <h5>{{city}} : {{Day?.day | date : 'shortDate'}}</h5>
+                <h6 *ngIf="Unit === 'metric'">Min : {{Day.tempMin}}°C</h6>
+                <h6 *ngIf="Unit === 'metric'">Max : {{Day.tempMax}}°C</h6>
+                <h6 *ngIf="Unit === 'imperial'">Min : {{Day.tempMin}}°F</h6>
+                <h6 *ngIf="Unit === 'imperial'">Max : {{Day.tempMax}}°F</h6>
+                <img class="rounded mx-auto d-block" src="http://openweathermap.org/img/wn/{{Day.icon}}@2x.png">
+            </div>
+        </div>
+    </div>
+</div>

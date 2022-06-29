@@ -1,0 +1,22 @@
+<!-- HEADER (NAVBAR) -->
+<nav class="navbar navbar-expand-md navbar-light bg-light bg-gradient">
+    <div class="container ">
+        <!-- NavBar Brand and Toggler Icon -->
+        <a class="navbar-brand" href="/">Weather App</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-Content"
+            aria-controls="navbar-Content" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbar-Content">
+            <!-- Routing to other Components -->
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item"><a routerLink="CurrentCity" class="nav-link"> Current Weather (City) </a></li>
+                <li class="nav-item"><a routerLink="CurrentCoord" class="nav-link"> Current Weather (Coordinates) </a>
+                </li>
+                <li class="nav-item"><a routerLink="ForecastCity" class="nav-link"> Forecast (City) </a></li>
+                <li class="nav-item"><a routerLink="ForecastCoord" class="nav-link"> Forecast (Coordinates) </a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
