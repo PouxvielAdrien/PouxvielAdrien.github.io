@@ -29,9 +29,9 @@ export class CurrentCityComponent implements OnInit {
   ngOnInit(): void {
     this.loadData();
     this.weatherForm = new FormGroup({
-      'weatherCity': new FormControl(this.session, [Validators.required, Validators.minLength(4)]),
-      'weatherUnit': new FormControl('', [Validators.required]),
-      'weatherLang': new FormControl('en')
+      weatherCity: new FormControl(this.session, [Validators.required, Validators.minLength(4)]),
+      weatherUnit: new FormControl('', [Validators.required]),
+      weatherLang: new FormControl('en')
     });
   }
 
@@ -42,24 +42,25 @@ export class CurrentCityComponent implements OnInit {
     this.Unit = this.weatherForm.value.weatherUnit;
     this.Lang = this.weatherForm.value.weatherLang;
     localStorage.setItem('SessionCC', JSON.stringify(this.city));
-    await
-      this.ws.CityWeather(this.city, this.Unit, this.Lang);
+    await this.ws.CityWeather(this.city, this.Unit, this.Lang);
 
     /* It is necessary to  to check and create the temperatures in celcius 
     and farenheint because even passing the unit in the call of the API,
     the temperatures are still not in the good unit */
     if (this.Unit == 'metric') {
-      this.myWeather = new CurrentWeather(this.ws.Data.name,
-        this.ws.Data.temp_celcius,
-        this.ws.Data.weather[0].icon,
-        this.ws.Data.weather[0].description)
+      console.log('Data.name',this.ws.Data.name)
+      this.myWeather = new CurrentWeather(
+      this.ws.Data.name,
+      this.ws.Data.temp_celcius,
+      this.ws.Data.weather[0].icon,
+      this.ws.Data.weather[0].description)
     }
 
     else {
       this.myWeather = new CurrentWeather(this.ws.Data.name,
-        this.ws.Data.temp_imperial,
-        this.ws.Data.weather[0].icon,
-        this.ws.Data.weather[0].description)
+      this.ws.Data.temp_imperial,
+      this.ws.Data.weather[0].icon,
+      this.ws.Data.weather[0].description)
     }
     this.recherche = true;
   }

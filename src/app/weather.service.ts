@@ -27,70 +27,35 @@ export class WeatherService {
   /* Request for the Current Weather (Coordinates) */
   async CoordWeather(lat: string, lon: string, unit: string, lang: string) {
     await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&lang=${lang}&appid=8a2870746354b988e645d9ae3f604075&unit=${unit}`)
-      .then(response => {
-        if (response.ok) {
-          response.json().then(data => {
-            this.setWeatherData(data)
-          })
-        }
-        else {
-          console.log("ERROR");
-          return response.ok
-        }
-        return
-      })
+      .then(response => response.json())
+      .then(data => this.setWeatherData(data))
+      .catch(error => console.log(error))
   }
 
   /* Request for the Current Weather (City) */
   async CityWeather(city: string, unit: string, langage: string) {
     await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=8a2870746354b988e645d9ae3f604075&unit=${unit}&lang=${langage}`)
-      .then(response => {
-        if (response.ok) {
-          response.json().then(data => {
-            this.setWeatherData(data)
-          })
-        }
-        else {
-          console.log("ERROR");
-          return response.ok
-        }
-        return
-      })
-
+      .then(response => response.json())
+      .then(data => this.setWeatherData(data))
+      .catch(error => console.log(error))
   }
+
+
 
   /* Request for the Weather Forecast (City) */
   async CityForecast(city: string, unit: string, lang: string) {
     await fetch(`https://api.openweathermap.org/data/2.5/forecast?&lang=${lang}&units=${unit}&q=${city}&appid=8a2870746354b988e645d9ae3f604075`)
-      .then(response => {
-        if (response.ok) {
-          response.json().then(data => {
-            this.setForecastData(data)
-          })
-        }
-        else {
-          console.log("ERROR");
-          return response.ok
-        }
-        return
-      })
+      .then(response => response.json())
+      .then(data => this.setForecastData(data))
+      .catch(error => console.log(error))
   }
 
   /* Request for the Weather Forecast (Coordinates) */
   async CoordForecast(lat: string, lon: any, unit: string, lang: string) {
     await fetch(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&lang=${lang}&units=${unit}&appid=8a2870746354b988e645d9ae3f604075`)
-      .then(response => {
-        if (response.ok) {
-          response.json().then(data => {
-            this.setForecastData(data)
-          })
-        }
-        else {
-          console.log("ERROR");
-          return response.ok
-        }
-        return
-      })
+      .then(response => response.json())
+      .then(data => this.setForecastData(data))
+      .catch(error => console.log(error))
   }
 
   /* Set Functions allow to define the data which will be used */
@@ -121,8 +86,6 @@ export class WeatherService {
         return this.ok
       })
   }
-
-
 }
 
 

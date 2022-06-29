@@ -1,12 +1,12 @@
 <!-- CURRENT WEATHER (COORDINATES) -->
 <div class="container">
     <div class="row justify-content-center">
-        <div class="col-8">
+        <div class="col-10 col-lg-8">
             <!-- Form to get data from the user -->
             <!-- Data Collected : Latitude and Longitude -->
             <form [formGroup]="weatherForm" (ngSubmit)="ShowCoord()" class="card card-1 m-3">
                 <div class="row justify-content-center">
-                    <div class="col-8">
+                    <div class="col-10">
                         <div class="input-group m-2">
                             <span class="input-group-text" id="inputGroup-sizing-sm">Coordinates</span>
                             <input id="lat" name="lat" class="form-control" type="text" placeholder="Latitude"
@@ -19,7 +19,7 @@
 
                 <!-- Data Collected : Unit -->
                 <div class="row justify-content-center">
-                    <div class="col-3">
+                    <div class="col-4">
                         <div class="form-floating">
                             <select id="units" class="form-select" name="units" id="floatingUnit"
                                 formControlName="weatherUnit" required>
@@ -31,21 +31,21 @@
                     </div>
 
                     <!-- Data Collected : Langage (default = English) -->
-                    <div class="col-3 ">
+                    <div class="col-4">
                         <div class="form-floating">
                             <select id="langage" class="form-select" id="floatingLang" name="langage"
                                 formControlName="weatherLang">
                                 <option> en </option>
                                 <option> fr </option>
                             </select>
-                            <label for="floatingLang">Langage</label>
+                            <label for="floatingLang">Lang</label>
                         </div>
                     </div>
                 </div>
 
                 <!-- Button to submit Data and allow the display of the current weather -->
                 <div class="row justify-content-center">
-                    <div class="col-1 m-2">
+                    <div class="col-2 m-2">
                         <button type="submit" class="btn btn-primary" [disabled]="weatherForm.invalid">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                 class="bi bi-search" viewBox="0 0 16 16">
@@ -57,9 +57,11 @@
                 </div>
             </form>
         </div>
+    </div>
 
         <!-- Data display : City Name, Weather Kind, Weather Icon, Max and Min Temperature -->
-        <div class="col-8">
+    <div class="row justify-content-center">
+        <div class="col-8 col-lg-5">
             <div class="card card-2 m-3" *ngIf="recherche === true">
                 <div class="row justify-content-center">
                     <div class="col-6 m-1">
