@@ -1,11 +1,13 @@
-### WEATHER-APP ###
+# WEATHER-APP #
 
 ##  Access to the Application  ##
-# GitHub Pages 
-You can click on this link to access the application hosted live on GitHub Pages :
-            
-             [https://pouxvieladrien.github.io/](Weather-App Link)  
+### GitHub Pages ###
+You can click on this link to access the application hosted live on GitHub Pages : [Weather-App Link](https://pouxvieladrien.github.io/) 
 
+            https://pouxvieladrien.github.io/
+            
+### Local Server ###
+You can run the command "ng serve" to open the Weather-App on your [localhost](http://localhost:4200/)
 
 ## Description of the Project ##
 - Description : This is a weather forecast web application hosted in Github Pages which will display the current weather and a forecast for a place (city, coordinates) entered by the user.
@@ -20,13 +22,13 @@ You can click on this link to access the application hosted live on GitHub Pages
           - If users come back to the app after closing the browser, the app remembers the last city selected
 
 
+## Running unit and e2e tests ##
+
+That was the most complicated part for me to do because I'm not used this testing. 
+I executed some unit tests with Karma :
 
 
-  
+I Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
 
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## AUTHOR ##
+## Author ##
 Adrien Pouxviel
