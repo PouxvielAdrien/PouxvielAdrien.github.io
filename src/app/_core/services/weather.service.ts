@@ -2,7 +2,9 @@
 
 /* Import the application components and services */
 import { Injectable } from '@angular/core';
-import { Forecast } from './forecast';
+import { Forecast } from '../models/forecast';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { WeatherUnit } from '../models/global';
 
 
 @Injectable({
@@ -16,9 +18,13 @@ export class WeatherService {
   DataFor: Forecast[] = [];
   Langage = '';
   Unit = '';
-  ok: any;
+  answer: any;
+  
 
-  constructor() { }
+  url='https://api.openweathermap.org/data/2.5/weather'
+  apiKey = '8a2870746354b988e645d9ae3f604075'
+
+  constructor(private http:HttpClient) { }
 
   /* Different requests to the OpenWeatherMap API with the Langage, the Unit, the City Name or the Lagitude and the Longitude as parameters
   These functions are asynchronous so that there are no errors while the request is being made 
@@ -45,13 +51,14 @@ export class WeatherService {
   /* Request for the Weather Forecast (City) */
   async CityForecast(city: string, unit: string, lang: string) {
     await fetch(`https://api.openweathermap.org/data/2.5/forecast?&lang=${lang}&units=${unit}&q=${city}&appid=8a2870746354b988e645d9ae3f604075`)
+      
       .then(response => response.json())
       .then(data => this.setForecastData(data))
       .catch(error => console.log(error))
   }
 
   /* Request for the Weather Forecast (Coordinates) */
-  async CoordForecast(lat: string, lon: any, unit: string, lang: string) {
+  async CoordForecast(lat: string, lon: any, unit: WeatherUnit, lang: string) {
     await fetch(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&lang=${lang}&units=${unit}&appid=8a2870746354b988e645d9ae3f604075`)
       .then(response => response.json())
       .then(data => this.setForecastData(data))
@@ -79,13 +86,38 @@ export class WeatherService {
     return this.Data;
   }
 
+  getWeatherByLocation(lat:number, lon:number, units: WeatherUnit, lang:string):Observable<>{
+    let params = new HttpParams()
+    .set('lat', lat)
+    .set('lon', lon)
+    .set('appid', this.apiKey)
+    .set('units', units)
+    .set('lang', lang)
+    return this.http.get(this.url, {params});
+  }
+
+
   async Fetch() {
     await fetch(`https://api.openweathermap.org/data/2.5/weather?q=London&appid=8a2870746354b988e645d9ae3f604075`)
       .then(response => {
-        this.ok = response.ok
-        return this.ok
+        this.answer = response.ok
+        return this.answer
       })
   }
+
+
+  CityTest(city: string, unit: string, langage: string) {
+    let params = new HttpParams()
+    .set('city', city)
+    .set('unit', unit)
+    .set('lang', langage)
+    .set('appid', this.apiKey)
+    return this.http.get(this.url, {params})
+  }
+
+
+
+
 }
 
 

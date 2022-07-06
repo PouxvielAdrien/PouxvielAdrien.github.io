@@ -4,7 +4,7 @@
 # GitHub Pages 
 You can click on this link to access the application hosted live on GitHub Pages :
             
-             [https://pouxvieladrien.github.io/](Weather-App Link)  
+             https://pouxvieladrien.github.io/
 
 
 ## Description of the Project ##

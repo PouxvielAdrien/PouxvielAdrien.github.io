@@ -2,9 +2,10 @@
 
 /* Import the application components and services */
 import { Component, OnInit, } from '@angular/core';
-import { WeatherService } from '../weather.service'
-import { FormGroup, FormControl } from '@angular/forms';
-import { Forecast } from '../forecast';
+import { WeatherService } from '../_core/services/weather.service'
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { Forecast } from '../_core/models/forecast';
+
 
 @Component({
   selector: 'app-forecast',
@@ -19,15 +20,16 @@ export class ForecastComponent implements OnInit {
   city: any;
   Unit: any;
   Lang: any;
-  session: any
+  session: any;
+  recherche = false;
 
   constructor(private ws: WeatherService) { }
 
   ngOnInit(): void {
     this.loadData();
     this.forecastForm = new FormGroup({
-      forecastCity: new FormControl(this.session),
-      forecastUnit: new FormControl(''),
+      forecastCity: new FormControl(this.session, [Validators.required, Validators.minLength(4)]),
+      forecastUnit: new FormControl('metric'),
       forecastLang: new FormControl('en')
     });
   }
@@ -42,6 +44,7 @@ export class ForecastComponent implements OnInit {
     localStorage.setItem('SessionFCity', JSON.stringify(this.city));
     await this.ws.CityForecast(this.city, this.Unit, this.Lang)
     this.DataFor = this.ws.DataFor;
+    this.recherche = true;
   }
 
   /* Function which allows to store in localStorage the last Latitude and Longitude selected by the user */

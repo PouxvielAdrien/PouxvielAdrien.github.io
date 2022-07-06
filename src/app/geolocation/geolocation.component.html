@@ -5,24 +5,14 @@
             <!-- Form to get data from the user -->
             <!-- Data Collected : Latitude and Longitude -->
             <div class="card text-center m-3">
-                <form [formGroup]="forecastForm" (ngSubmit)="ShowForecast()" class="needs-validation">
-                    <div class="row justify-content-center">
-                        <div class="col-10">
-                            <div class="input-group input-group-lg p-3">
-                                <span class="input-group-text" id="inputGroup-sizing-default">Coordinates</span>
-                                <input id="lat" name="lat" class="form-control" type="text" placeholder="Latitude"
-                                    formControlName="forecastLat" />
-                                <input id="lon" name="lon" class="form-control" type="text" placeholder="Longitude"
-                                    formControlName="forecastLon" />
-                            </div>
-                        </div>
-                    </div>
+                <form [formGroup]="geoForm" (ngSubmit)="SubmitGeoLocation()" class="needs-validation">
+
 
                     <!-- Data Collected : Unit -->
                     <div class="row justify-content-center m-1">
                         <div class="col-4 ">
                             <div class="form-floating">
-                                <select id="units" class="form-select" name="units" formControlName="forecastUnit"
+                                <select id="units" class="form-select" name="units" formControlName="geoUnit"
                                     id="floatingUnit" required>
                                     <option> metric </option>
                                     <option> imperial </option>
@@ -34,7 +24,7 @@
                         <!-- Data Collected : Langage (default = English) but not really useful because the display does not include language differences -->
                         <div class="col-4 ">
                             <div class="form-floating">
-                                <select id="langage" class="form-select" name="langage" formControlName="forecastLang"
+                                <select id="langage" class="form-select" name="langage" formControlName="geoLang"
                                     id="floatingLang">
                                     <option> en </option>
                                     <option> fr </option>
@@ -47,12 +37,12 @@
                     <!-- Button to submit Data and allow the display of the weather forecast -->
                     <div class="row justify-content-center">
                         <div class="col-2 m-2">
-                            <button type="submit" class="btn btn-primary bg-primary" [disabled]="forecastForm.invalid">
+                            <button type="submit" class="btn btn-primary bg-primary" [disabled]="geoForm.invalid">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                     class="bi bi-search" viewBox="0 0 16 16">
                                     <path
                                         d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
-                                </svg>
+                                </svg> Submit Geolocation
                             </button>
                         </div>
                     </div>
@@ -61,33 +51,29 @@
         </div>
     </div>
 
-    <!-- Data display : Date, Weather Icon, Max and Min Temperature -->
 
+    
     <div class="card text-center" *ngIf="recherche === true">
         <div class="card-header">
-            <p>Forecast Weather</p>
+            <p>Geolocation Weather</p>
         </div>
+        
         <div class="card-body">
-            <h2 class="card-title">{{myWeather.cityName}}</h2>
+            <h2 class="card-title">{{geoCityName}}, {{geoData.sys.country}}</h2>
             <h4 *ngIf="Lang === 'en'">Current Weather</h4>
             <h4 *ngIf="Lang === 'fr'">Temps Actuel</h4>
-            <h5 *ngIf="Unit === 'metric'" >{{myWeather.temp}}°C</h5>
-            <h5 *ngIf="Unit === 'imperial'">{{myWeather.temp}}°F</h5>
-            <p class="card-text">{{myWeather.weatherKind}}</p>
-            <img src="http://openweathermap.org/img/wn/{{myWeather.icon}}@2x.png" class="img-fluid">
-        </div> 
+            <h5 *ngIf="Unit === 'metric'">{{geoTemp}}°C</h5>
+            <h5 *ngIf="Unit === 'imperial'">{{geoTemp}}°F</h5>
+            <p class="card-text">{{geoKind}}</p>
 
-        <div class="card-group">
-            <div class="card" *ngFor="let Day of DataFor, let i = index;">
-                <div class="card-body">
-                    <h5>{{Day?.day | date : 'shortDate'}}</h5>
-                    <h6 *ngIf="Unit === 'metric'">Min : {{Day.tempMin}}°C</h6>
-                    <h6 *ngIf="Unit === 'metric'">Max : {{Day.tempMax}}°C</h6>
-                    <h6 *ngIf="Unit === 'imperial'">Min : {{Day.tempMin}}°F</h6>
-                    <h6 *ngIf="Unit === 'imperial'">Max : {{Day.tempMax}}°F</h6>
-                    <img class="img-fluid" src="http://openweathermap.org/img/wn/{{Day.icon}}@2x.png">
-                </div>
-            </div>
-        </div>
+            <img src="http://openweathermap.org/img/wn/{{geoIcon}}@2x.png" class="img-fluid">
+        </div> 
     </div>
+
 </div>
+
+
+
+
+
+

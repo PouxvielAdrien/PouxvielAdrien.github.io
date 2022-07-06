@@ -2,9 +2,10 @@
 
 /* Import the application components and services */
 import { Component, OnInit } from '@angular/core';
-import {WeatherService} from '../weather.service'
+import {WeatherService} from '../_core/services/weather.service'
 import { FormGroup, FormControl } from '@angular/forms';
-import { Forecast } from '../forecast';
+import { Forecast } from '../_core/models/forecast';
+import { CurrentWeather } from '../_core/models/current-weather';
 
 @Component({
   selector: 'app-forecast-coord',
@@ -22,6 +23,9 @@ export class ForecastCoordComponent implements OnInit {
   Lang:any;
   sessionLat:any
   sessionLon:any
+  recherche = false;
+  myWeather = new CurrentWeather("", "", "", "");
+
  
   constructor(private ws:WeatherService) { }
 
@@ -30,7 +34,7 @@ export class ForecastCoordComponent implements OnInit {
     this.forecastForm = new FormGroup({
       forecastLat: new FormControl(this.sessionLat),
       forecastLon: new FormControl(this.sessionLon),
-      forecastUnit: new FormControl(''),
+      forecastUnit: new FormControl('metric'),
       forecastLang: new FormControl('en')}) 
   }
 
@@ -44,8 +48,29 @@ export class ForecastCoordComponent implements OnInit {
     this.Lang=this.forecastForm.value.forecastLang;
     localStorage.setItem('SessionFCoordLat', JSON.stringify(this.lat));
     localStorage.setItem('SessionFCoordLon', JSON.stringify(this.lon));
-    await this.ws.CoordForecast(this.lat,this.lon, this.Unit, this.Lang)
+
+    await this.ws.CoordForecast(this.lat,this.lon, this.Unit, this.Lang);
     this.DataFor = this.ws.DataFor;
+
+    await this.ws.CoordWeather(this.lat, this.lon, this.Unit, this.Lang);
+
+    /* It is necessary to  to check and create the temperatures in celcius 
+    and farenheint because even passing the unit in the call of the API,
+    the temperatures are still not in the good unit */
+    if (this.Unit == 'metric') {
+      this.myWeather = new CurrentWeather(this.ws.Data.name,
+        this.ws.Data.temp_celcius,
+        this.ws.Data.weather[0].icon,
+        this.ws.Data.weather[0].description);
+    }
+
+    else {
+      this.myWeather = new CurrentWeather(this.ws.Data.name,
+        this.ws.Data.temp_imperial,
+        this.ws.Data.weather[0].icon,
+        this.ws.Data.weather[0].description);
+    }
+    this.recherche = true;
   }
 
   /* Function which allows to store in localStorage the last Latitude and Longitude selected by the user */
