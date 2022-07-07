@@ -4,71 +4,86 @@
         <div class="col-10 col-lg-8">
             <!-- Form to get data from the user -->
             <!-- Data Collected : City Name -->
-            <form [formGroup]="weatherForm" (ngSubmit)="ShowCity()" class="card card-1 m-3">
-                <div class="row justify-content-center">
-                    <div class="col-10">
-                        <div class="input-group m-3">
-                            <span class="input-group-text" id="inputGroup-sizing-default">City Name</span>
-                            <input id="city" name="city" class="form-control" type="text" formControlName="weatherCity"/>
-                        </div>
-                    </div>
-                </div>
+        <div class="card text-center m-3">
+                <form [formGroup]="weatherForm" (ngSubmit)="ShowCity()" class="needs-validation">
+                    <div class="row justify-content-center">
+                        <div class="col-10">
+                            <div class="input-group input-group-lg p-3">
+                                <span class="input-group-text" id="inputGroup-sizing-default">City Name</span>
+                                <input id="city" name="city" class="form-control" type="text" formControlName="weatherCity"/>
 
-                <!-- Data Collected : Unit -->
-                <div class="row justify-content-center m-1">
-                    <div class="col-4">
-                        <div class="form-floating">
-                            <select id="units" class="form-select" name="units" id="floatingUnit"
-                                formControlName="weatherUnit">
-                                <option value="metric"> metric </option>
-                                <option value="imperial"> imperial </option>
-                            </select>
-                            <label for="floatingUnit">Unit</label>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Data Collected : Langage (default = English) -->
-                    <div class="col-4">
-                        <div class="form-floating">
-                            <select id="langage" class="form-select" id="floatingLang" name="langage"
-                                formControlName="weatherLang">
-                                <option> en </option>
-                                <option> fr </option>
-                            </select>
-                            <label for="floatingLang">Lang</label>
+                    <!-- Data Collected : Unit -->
+                    <div class="row justify-content-center m-1">
+                        <div class="col-4">
+                            <div class="form-floating">
+                                <select id="units" class="form-select" name="units" id="floatingUnit"
+                                    formControlName="weatherUnit">
+                                    <option value="metric"> metric </option>
+                                    <option value="imperial"> imperial </option>
+                                </select>
+                                <label for="floatingUnit">Unit</label>
+                            </div>
+                        </div>
+
+                        <!-- Data Collected : Langage (default = English) -->
+                        <div class="col-4">
+                            <div class="form-floating">
+                                <select id="langage" class="form-select" id="floatingLang" name="langage"
+                                    formControlName="weatherLang">
+                                    <option> en </option>
+                                    <option> fr </option>
+                                </select>
+                                <label for="floatingLang">Lang</label>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- Button to submit Data and allow the display of the current weather -->
-                <div class="row justify-content-center">
-                    <div class="col-2 m-2">
-                        <button type="submit" class="btn btn-primary bg-primary" [disabled]="weatherForm.invalid">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                class="bi bi-search" viewBox="0 0 16 16">
-                                <path
-                                    d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
-                            </svg>
-                        </button>
+                    <!-- Button to submit Data and allow the display of the current weather -->
+                    <div class="row justify-content-center">
+                        <div class="col-2 m-2">
+                            <button type="submit" class="btn btn-primary bg-primary"  [disabled]="weatherForm.invalid" >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                    class="bi bi-search" viewBox="0 0 16 16">
+                                    <path
+                                        d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
+                                </svg>
+                            </button>
+                        </div>
                     </div>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
     </div>
 
-    <!-- Data display : City Name, Weather Kind, Weather Icon, Max and Min Temperature -->
-    <div class="row justify-content-center">
-        <div class="col-8 col-lg-5">
-            <div class="card card-2 m-3" *ngIf="recherche === true">
-                <div class="row justify-content-center">
 
-                    <div class="col-6 m-1">
-                        <h3> {{myWeather.cityName}}</h3>
-                        <h4 *ngIf="Unit === 'metric'">{{myWeather.temp}}°C</h4>
-                        <h5 *ngIf="Unit === 'imperial'">{{myWeather.temp}}°F</h5>
-                        <h5>{{myWeather.weatherKind}}</h5>
-                        <img src="http://openweathermap.org/img/wn/{{myWeather.icon}}@2x.png" class="img-fluid">
-                    </div>
+
+    <div class="card text-center" *ngIf="recherche === true">
+        <div class="card-header">
+            <p>Forecast Weather</p>
+        </div>
+        <div class="card-body">
+            <h2 class="card-title">{{myWeather.cityName}}</h2>
+            <h4 *ngIf="Lang === 'en'">Current Weather</h4>
+            <h4 *ngIf="Lang === 'fr'">Temps Actuel</h4>
+            <h5 *ngIf="Unit === 'metric'" >{{myWeather.temp}}°C</h5>
+            <h5 *ngIf="Unit === 'imperial'">{{myWeather.temp}}°F</h5>
+            <p class="card-text">{{myWeather.weatherKind}}</p>
+            <img src="http://openweathermap.org/img/wn/{{myWeather.icon}}@2x.png" class="img-fluid">
+        </div>             
+        
+        <div class="card-group">
+            <div class="card" *ngFor="let Day of DataFor, let i = index;">
+                <div class="card-body">
+                    <h5>{{Day?.day | date : 'shortDate'}}</h5>
+                    <h6 *ngIf="Unit === 'metric'">Min : {{Day.tempMin}}°C</h6>
+                    <h6 *ngIf="Unit === 'metric'">Max : {{Day.tempMax}}°C</h6>
+                    <h6 *ngIf="Unit === 'imperial'">Min : {{Day.tempMin}}°F</h6>
+                    <h6 *ngIf="Unit === 'imperial'">Max : {{Day.tempMax}}°F</h6>
+                    <img class="img-fluid" src="http://openweathermap.org/img/wn/{{Day.icon}}@2x.png">
                 </div>
             </div>
         </div>

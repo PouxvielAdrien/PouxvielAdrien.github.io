@@ -9,8 +9,7 @@
                     <div class="col-10">
                         <div class="input-group m-2">
                             <span class="input-group-text" id="inputGroup-sizing-default">City Name</span>
-                            <input id="city" name="city" class="form-control" type="text" formControlName="forecastCity"
-                                required />
+                            <input id="city" name="city" class="form-control" type="text" formControlName="forecastCity"/>
                         </div>
                     </div>
                 </div>
@@ -20,7 +19,7 @@
                     <div class="col-4 ">
                         <div class="form-floating">
                             <select id="units" class="form-select" name="units" formControlName="forecastUnit"
-                                id="floatingUnit" required>
+                                id="floatingUnit">
                                 <option> metric </option>
                                 <option> imperial </option>
                             </select>
@@ -58,15 +57,22 @@
     </div>
 
     <!-- Data display : Date, Weather Icon, Max and Min Temperature -->
-    <div class="row justify-content-center">
-        <div class="col-3 col-md-2 col-lg-2 card m-2" *ngFor="let Day of DataFor, let i = index;">
-            <div class="card-block m-1">
-                <h5>{{city}} : {{Day?.day | date : 'shortDate'}}</h5>
-                <h6 *ngIf="Unit === 'metric'">Min : {{Day.tempMin}}°C</h6>
-                <h6 *ngIf="Unit === 'metric'">Max : {{Day.tempMax}}°C</h6>
-                <h6 *ngIf="Unit === 'imperial'">Min : {{Day.tempMin}}°F</h6>
-                <h6 *ngIf="Unit === 'imperial'">Max : {{Day.tempMax}}°F</h6>
-                <img class="rounded" src="http://openweathermap.org/img/wn/{{Day.icon}}@2x.png">
+
+    <div class="card text-center" *ngIf="recherche === true">
+        <div class="card-header">
+            <p>Forecast Weather</p>
+        </div>
+        <h3 class="card-title"> {{city}} </h3>
+        <div class="card-group">
+            <div class="card" *ngFor="let Day of DataFor, let i = index;">
+                <div class="card-body">
+                    <h5>{{Day?.day | date : 'shortDate'}}</h5>
+                    <h6 *ngIf="Unit === 'metric'">Min : {{Day.tempMin}}°C</h6>
+                    <h6 *ngIf="Unit === 'metric'">Max : {{Day.tempMax}}°C</h6>
+                    <h6 *ngIf="Unit === 'imperial'">Min : {{Day.tempMin}}°F</h6>
+                    <h6 *ngIf="Unit === 'imperial'">Max : {{Day.tempMax}}°F</h6>
+                    <img class="img-fluid" src="http://openweathermap.org/img/wn/{{Day.icon}}@2x.png">
+                </div>
             </div>
         </div>
     </div>

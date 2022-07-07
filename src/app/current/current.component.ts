@@ -2,8 +2,8 @@
 
 /* Import the application components and services */
 import { Component, OnInit } from '@angular/core';
-import { WeatherService } from '../weather.service'
-import { CurrentWeather } from '../current-weather';
+import { WeatherService } from '../_core/services/weather.service'
+import { CurrentWeather } from '../_core/models/current-weather';
 import { FormGroup, FormControl } from '@angular/forms';
 
 
@@ -15,7 +15,7 @@ import { FormGroup, FormControl } from '@angular/forms';
 export class CurrentComponent implements OnInit {
 
   /* Initialization of variables */
-  myWeather = new CurrentWeather("", "", "", "")
+  myWeather = new CurrentWeather("", 0, "", "");
   lat: any;
   lon: any;
   Unit: any;
