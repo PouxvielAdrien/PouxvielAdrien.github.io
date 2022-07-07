@@ -3,8 +3,6 @@
 /* Import the application components and modules */
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { CurrentComponent } from './current/current.component';
-import { ForecastComponent } from './forecast/forecast.component';
 import { CurrentCityComponent } from './current-city/current-city.component';
 import { ForecastCoordComponent } from './forecast-coord/forecast-coord.component';
 import { NotfoundComponent } from './notfound/notfound.component';
