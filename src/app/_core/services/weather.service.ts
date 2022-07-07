@@ -2,9 +2,10 @@
 
 /* Import the application components and services */
 import { Injectable } from '@angular/core';
-import { Forecast } from '../models/forecast';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { WeatherUnit } from '../models/global';
+import { constructWeatherFromApiData, CurrentWeather, Forecast, WeatherApiReponse, WeatherUnit } from '../models';
+import { map, Observable } from 'rxjs';
+
 
 
 @Injectable({
@@ -51,7 +52,6 @@ export class WeatherService {
   /* Request for the Weather Forecast (City) */
   async CityForecast(city: string, unit: string, lang: string) {
     await fetch(`https://api.openweathermap.org/data/2.5/forecast?&lang=${lang}&units=${unit}&q=${city}&appid=8a2870746354b988e645d9ae3f604075`)
-      
       .then(response => response.json())
       .then(data => this.setForecastData(data))
       .catch(error => console.log(error))
@@ -86,14 +86,17 @@ export class WeatherService {
     return this.Data;
   }
 
-  getWeatherByLocation(lat:number, lon:number, units: WeatherUnit, lang:string):Observable<>{
+  getWeatherByLocation(lat:number, lon:number, units: WeatherUnit, lang:string):Observable<CurrentWeather>{
     let params = new HttpParams()
     .set('lat', lat)
     .set('lon', lon)
     .set('appid', this.apiKey)
     .set('units', units)
     .set('lang', lang)
-    return this.http.get(this.url, {params});
+    return this.http.get<WeatherApiReponse>(this.url, {params})
+    .pipe(
+      map(reponse => constructWeatherFromApiData(reponse, lang, units)) 
+      )
   }
 
 

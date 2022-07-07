@@ -1,3 +1,13 @@
+interface WeatherData {
+    description:string;
+    icon:string;
+}
+
+
+
 export interface WeatherApiReponse {
-    weather:string[]
+    weather:WeatherData[];
+    name:string;
+    main:{temp:number}
+
 }

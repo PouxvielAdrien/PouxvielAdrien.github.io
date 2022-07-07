@@ -24,7 +24,7 @@ export class ForecastCoordComponent implements OnInit {
   sessionLat:any
   sessionLon:any
   recherche = false;
-  myWeather = new CurrentWeather("", "", "", "");
+  myWeather = new CurrentWeather("", 0, "", "");
 
  
   constructor(private ws:WeatherService) { }

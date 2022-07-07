@@ -1,65 +1,63 @@
 /* Import the application components and services */
 import { Component, OnInit } from '@angular/core';
-import { WeatherService } from '../_core'
+import { CurrentWeather, WeatherApiReponse, WeatherService, WeatherUnit } from '../_core'
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Forecast } from '../_core/models/forecast';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-geolocation',
   templateUrl: './geolocation.component.html',
   styleUrls: ['./geolocation.component.css']
 })
-export class GeolocationComponent implements OnInit {
-  Lat: any;
-  Lon: any;
-  Unit: any;
-  Lang: any;
+export class GeolocationComponent {
 
-  geoForm: any;
-  geoData: any;
-  geoCityName: any;
-  geoTemp: any;
-  geoIcon: any;
-  geoKind: any;
 
+  currentWeather: CurrentWeather | null = null;
+  geoForm: FormGroup;
   locationDenied = true;
-  recherche = false;
+  isSearching = false;
 
 
 
-  constructor(private ws: WeatherService) { }
-
-  ngOnInit(): void {
+  constructor(private ws: WeatherService) { 
     this.geoForm = new FormGroup({
       geoUnit: new FormControl('metric'),
       geoLang: new FormControl('fr')
     });
-    this.Unit = this.geoForm.value.geoUnit;
-    this.Lang = this.geoForm.value.geoLang;
-    this.SetGeoLocation();
+  }
 
+
+  get unitFormValue():WeatherUnit{
+    return this.geoForm.get("geoUnit")?.value
+  }
+
+  get langFormValue():string{
+    return this.geoForm.get("geoLang")?.value
   }
 
   SetGeoLocation() {
     if ("geolocation" in navigator) {
-      this.Unit = this.geoForm.value.geoUnit;
-      this.Lang = this.geoForm.value.geoLang;
-      console.log("Langue: ", this.Lang);
-      navigator.geolocation.watchPosition(
+      this.isSearching = true;
+      navigator.geolocation.getCurrentPosition(
         (succes) => {
-          this.Lat = succes.coords.latitude;
-          this.Lon = succes.coords.longitude;
-          this.ws.getWeatherByLocation(this.Lat, this.Lon, this.Unit, this.Lang)
+          this.ws.getWeatherByLocation(succes.coords.latitude, 
+            succes.coords.longitude,
+             this.unitFormValue, 
+             this.langFormValue)
+             .pipe(
+              finalize(()=> this.isSearching = false)
+             )
             .subscribe(data => {
-              this.geoData = data;
+              this.currentWeather = data;
             });
-
-            return this.geoData
           },
 
         (error) => {
+          this.isSearching = false;
           if (error.code == error.PERMISSION_DENIED) {
             this.locationDenied = false;
+            //TODO
           }
         })
     }
@@ -68,19 +66,6 @@ export class GeolocationComponent implements OnInit {
 
   SubmitGeoLocation() {
     this.SetGeoLocation();
-    if (this.Unit == 'metric') {
-      this.geoTemp = this.geoData.main.temp.toFixed(0);
-    }
-
-    else {
-      this.geoTemp = ((this.geoData.main.temp) * 9 / 5 + 32).toFixed(0);
-    }
-
-    this.geoCityName = this.geoData.name;
-    this.geoIcon = this.geoData.weather[0].icon;
-    this.geoKind = this.geoData.weather[0].description;
-    console.log("geoData : ", this.geoData);
-    this.recherche = true;
   }
 
 }

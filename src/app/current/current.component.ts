@@ -15,7 +15,7 @@ import { FormGroup, FormControl } from '@angular/forms';
 export class CurrentComponent implements OnInit {
 
   /* Initialization of variables */
-  myWeather = new CurrentWeather("", "", "", "");
+  myWeather = new CurrentWeather("", 0, "", "");
   lat: any;
   lon: any;
   Unit: any;

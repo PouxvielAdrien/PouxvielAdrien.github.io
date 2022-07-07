@@ -18,22 +18,18 @@ export class CurrentCityComponent implements OnInit {
 
   /* Initialization of variables */
   weatherForm: any;
-  myWeather = new CurrentWeather("", "", "", "");
+  myWeather = new CurrentWeather("", 0, "", "");
   city: any;
   Unit: any;
   Lang: any;
   recherche = false;
   session: any;
   DataFor: Forecast[] = [];
-  geoCoord: any;
-  geoLat: any;
-  geoLon: any;
-  locationDenied = true;
 
   constructor(private ws: WeatherService, private http: HttpClient) { }
 
   ngOnInit(): void {
-    this.loadData();
+    this.LoadData();
     this.weatherForm = new FormGroup({
       weatherCity: new FormControl(this.session, [Validators.required, Validators.minLength(4)]),
       weatherUnit: new FormControl('metric', [Validators.required]),
@@ -75,7 +71,7 @@ export class CurrentCityComponent implements OnInit {
   }
 
   /* Function which allows to store in localStorage the last Latitude and Longitude selected by the user */
-  loadData() {
+  LoadData() {
     let temporary: any;
     temporary = localStorage.getItem('SessionCC');
     this.session = JSON.parse(temporary);
