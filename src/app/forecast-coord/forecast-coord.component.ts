@@ -24,7 +24,7 @@ export class ForecastCoordComponent implements OnInit {
   sessionLat:any
   sessionLon:any
   recherche = false;
-  myWeather = new CurrentWeather("", 0, "", "");
+  myWeather = new CurrentWeather("", 0,0,0,"", "");
 
 
   constructor(private ws:WeatherService) { }
@@ -57,19 +57,9 @@ export class ForecastCoordComponent implements OnInit {
     /* It is necessary to  to check and create the temperatures in celcius
     and farenheint because even passing the unit in the call of the API,
     the temperatures are still not in the good unit */
-    if (this.Unit == 'metric') {
-      this.myWeather = new CurrentWeather(this.ws.apiReponseData.name,
-        this.ws.apiReponseData.temp_celcius,
-        this.ws.apiReponseData.weather[0].icon,
-        this.ws.apiReponseData.weather[0].description);
-    }
 
-    else {
-      this.myWeather = new CurrentWeather(this.ws.apiReponseData.name,
-        this.ws.apiReponseData.temp_imperial,
-        this.ws.apiReponseData.weather[0].icon,
-        this.ws.apiReponseData.weather[0].description);
-    }
+
+
     this.recherche = true;
   }
 

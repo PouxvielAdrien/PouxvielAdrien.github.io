@@ -4,11 +4,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import {
-  API_URL,
+  API_FORECAST_URL,
+  API_WEATHER_URL,
   constructWeatherFromApiData,
   CurrentWeather,
   Forecast,
-  WeatherApiReponse,
+  WeatherApiResponse,
   WeatherUnit
 } from '../models';
 import { map, Observable } from 'rxjs';
@@ -34,7 +35,7 @@ export class WeatherService {
   These functions are asynchronous so that there are no errors while the request is being made
   I Used the fetch method to make these calls */
 
-  /* Request for the Current Weather (Coordinates) */
+  /* FETCH METHODS */
   async CoordWeather(lat: string, lon: string, unit: string, lang: string) {
     await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&lang=${lang}&appid=8a2870746354b988e645d9ae3f604075&unit=${unit}`)
       .then(response => response.json())
@@ -87,8 +88,15 @@ export class WeatherService {
     return this.dataForcasted
   }
 
+  async Fetch() {
+    await fetch(`https://api.openweathermap.org/data/2.5/weather?q=London&appid=8a2870746354b988e645d9ae3f604075`)
+      .then(response => {
+        this.answer = response.ok
+        return this.answer
+      })
+  }
 
-
+  /* HTTP CALLS */
   getWeatherByLocation(lat:number, lon:number, units: WeatherUnit, lang:string):Observable<CurrentWeather>{
     let params = new HttpParams()
     .set('lat', lat)
@@ -96,7 +104,7 @@ export class WeatherService {
     .set('appid', this.apiKey)
     .set('units', units)
     .set('lang', lang)
-    return this.http.get<WeatherApiReponse>(API_URL, {params})
+    return this.http.get<WeatherApiResponse>(API_WEATHER_URL, {params})
     .pipe(
       map(response => constructWeatherFromApiData(response, lang, units))
       )
@@ -108,22 +116,23 @@ export class WeatherService {
       .set('unit', unit)
       .set('lang', lang)
       .set('appid', this.apiKey)
-    return this.http.get<WeatherApiReponse>(API_URL, {params})
+    return this.http.get<WeatherApiResponse>(API_WEATHER_URL, {params})
       .pipe(
         map(response => constructWeatherFromApiData(response, lang, unit))
       )
   }
 
-
-
-
-
-  async Fetch() {
-    await fetch(`https://api.openweathermap.org/data/2.5/weather?q=London&appid=8a2870746354b988e645d9ae3f604075`)
-      .then(response => {
-        this.answer = response.ok
-        return this.answer
-      })
+  callForecastCityApi(lat:number, lon:number, units: WeatherUnit, lang:string):Observable<CurrentWeather>{
+    let params = new HttpParams()
+      .set('lat', lat)
+      .set('lon', lon)
+      .set('appid', this.apiKey)
+      .set('units', units)
+      .set('lang', lang)
+    return this.http.get<WeatherApiResponse>(API_FORECAST_URL, {params})
+      .pipe(
+        map(response => constructWeatherFromApiData(response, lang, units))
+      )
   }
 
 

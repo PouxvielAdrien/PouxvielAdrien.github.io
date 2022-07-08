@@ -6,9 +6,10 @@ import { WeatherService } from '../_core/services/weather.service'
 import { CurrentWeather } from '../_core/models/current-weather';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Forecast } from '../_core/models/forecast';
-import { HttpClient } from '@angular/common/http';
+import {HttpClient, HttpParams, HttpParamsOptions} from '@angular/common/http';
 import {WeatherUnit} from "@core/models";
 import {finalize} from "rxjs";
+import {Router, ActivatedRoute} from "@angular/router";
 
 @Component({
   selector: 'app-current-city',
@@ -27,16 +28,22 @@ export class CurrentCityComponent implements OnInit {
   lang:string="";
   city:string="";
 
-  constructor(private ws: WeatherService, private http: HttpClient) {
+  params: HttpParams | null = null;
+
+
+  constructor(private ws: WeatherService, private http: HttpClient, private router:Router, private route:ActivatedRoute) {
     this.weatherForm = new FormGroup({
-      weatherCity: new FormControl(this.sessionCityName, [Validators.required, Validators.minLength(4)]),
-      weatherUnit: new FormControl('metric', [Validators.required]),
+      weatherCity: new FormControl("", [Validators.required, Validators.minLength(4)]),
+      weatherUnit: new FormControl('metric'),
       weatherLang: new FormControl('en')
     });
   }
 
   ngOnInit(): void {
     this.loadData();
+    this.weatherForm.setValue({weatherCity: this.sessionCityName, weatherUnit: "metric", weatherLang: "en" })
+
+
     //TODO Initialisation of the city
   }
 
@@ -57,10 +64,9 @@ export class CurrentCityComponent implements OnInit {
   async showCity() {
     this.isSearching = true;
     this.dataForcasted.splice(0, this.dataForcasted.length);
-    this.city=this.cityFormValue;
-    this.unit=this.unitFormValue;
-    this.lang=this.langFormValue;
-    localStorage.setItem('SessionCC', JSON.stringify(this.city));
+    localStorage.setItem('SessionCC', JSON.stringify(this.cityFormValue));
+
+
 
     /* old version */
     //await this.ws.CityWeather(this.cityFormValue, this.unitFormValue, this.langFormValue);
@@ -70,10 +76,9 @@ export class CurrentCityComponent implements OnInit {
       this.langFormValue)
       .pipe(
       finalize(()=> this.isSearching = false)
-    )
+      )
       .subscribe(data => {
         this.currentWeather = data;
-
         if(this.unitFormValue == 'imperial'){
           this.currentWeather.temp = ((this.currentWeather.temp - 273)* 9/5 + 32);
         }
@@ -83,10 +88,11 @@ export class CurrentCityComponent implements OnInit {
         console.log("this.currentWeather:", this.currentWeather);
       });
 
-
     await this.ws.CityForecast(this.cityFormValue, this.unitFormValue, this.langFormValue)
     this.dataForcasted = this.ws.dataForcasted;
-  }
+    this.changingQueryParams()
+
+     }
 
   /* Function which allows to store in localStorage the last Latitude and Longitude selected by the user */
   loadData() {
@@ -95,5 +101,14 @@ export class CurrentCityComponent implements OnInit {
     if (cityLocalyStored){
       this.sessionCityName = JSON.parse(cityLocalyStored);
     }
+  }
+
+  public changingQueryParams() {
+    this.router.navigate(
+        ['/'],
+        {queryParams: {
+            city: this.cityFormValue,
+            unit: this.unitFormValue,
+            lang: this.langFormValue}});
   }
 }

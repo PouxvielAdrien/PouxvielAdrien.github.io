@@ -80,10 +80,10 @@
             <div class="card" *ngFor="let Day of dataForcasted, let i = index;">
                 <div class="card-body">
                     <h5>{{Day?.day | date : 'shortDate'}}</h5>
-                    <h6 *ngIf="unit === 'metric'">Min : {{Day.tempMin}}°C</h6>
-                    <h6 *ngIf="unit === 'metric'">Max : {{Day.tempMax}}°C</h6>
-                    <h6 *ngIf="unit === 'imperial'">Min : {{Day.tempMin}}°F</h6>
-                    <h6 *ngIf="unit === 'imperial'">Max : {{Day.tempMax}}°F</h6>
+                    <h6 *ngIf="currentWeather.unit === 'metric'">Min : {{Day.tempMin}}°C</h6>
+                    <h6 *ngIf="currentWeather.unit === 'metric'">Max : {{Day.tempMax}}°C</h6>
+                    <h6 *ngIf="currentWeather.unit === 'imperial'">Min : {{Day.tempMin}}°F</h6>
+                    <h6 *ngIf="currentWeather.unit === 'imperial'">Max : {{Day.tempMax}}°F</h6>
                     <img class="img-fluid" src="http://openweathermap.org/img/wn/{{Day.icon}}@2x.png">
                 </div>
             </div>
