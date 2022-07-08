@@ -11,7 +11,10 @@ export class CurrentWeather {
                 public unit:WeatherUnit="metric"){}
 }
 
+
+
+
 export const constructWeatherFromApiData = (data:WeatherApiReponse, lang:string, unit:WeatherUnit):CurrentWeather => {
-    return new CurrentWeather(data.name, data.main.temp, data.weather[0].icon, data.weather[0].description, lang, unit )
+    return new CurrentWeather(data.name, data.main.temp_min, data.weather[0].icon, data.weather[0].description, lang, unit )
 
 }

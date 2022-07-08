@@ -20,10 +20,10 @@ export class GeolocationComponent {
 
 
 
-  constructor(private ws: WeatherService) { 
+  constructor(private ws: WeatherService) {
     this.geoForm = new FormGroup({
       geoUnit: new FormControl('metric'),
-      geoLang: new FormControl('fr')
+      geoLang: new FormControl('en')
     });
   }
 
@@ -36,14 +36,14 @@ export class GeolocationComponent {
     return this.geoForm.get("geoLang")?.value
   }
 
-  SetGeoLocation() {
+  setGeoLocation() {
     if ("geolocation" in navigator) {
       this.isSearching = true;
       navigator.geolocation.getCurrentPosition(
         (succes) => {
-          this.ws.getWeatherByLocation(succes.coords.latitude, 
+          this.ws.getWeatherByLocation(succes.coords.latitude,
             succes.coords.longitude,
-             this.unitFormValue, 
+             this.unitFormValue,
              this.langFormValue)
              .pipe(
               finalize(()=> this.isSearching = false)
@@ -61,11 +61,11 @@ export class GeolocationComponent {
           }
         })
     }
-    
+
   }
 
-  SubmitGeoLocation() {
-    this.SetGeoLocation();
+  onSubmitGeoLocation() {
+    this.setGeoLocation();
   }
 
 }

@@ -1,4 +1,4 @@
-/* CURRENT WEATHER (CITY) COMPONENT */
+/* WEATHER CITY COMPONENT */
 
 /* Import the application components and services */
 import { Component, OnInit } from '@angular/core';
@@ -7,7 +7,8 @@ import { CurrentWeather } from '../_core/models/current-weather';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Forecast } from '../_core/models/forecast';
 import { HttpClient } from '@angular/common/http';
-
+import {WeatherUnit} from "@core/models";
+import {finalize} from "rxjs";
 
 @Component({
   selector: 'app-current-city',
@@ -17,63 +18,82 @@ import { HttpClient } from '@angular/common/http';
 export class CurrentCityComponent implements OnInit {
 
   /* Initialization of variables */
-  weatherForm: any;
-  myWeather = new CurrentWeather("", 0, "", "");
-  city: any;
-  Unit: any;
-  Lang: any;
-  recherche = false;
-  session: any;
-  DataFor: Forecast[] = [];
+  weatherForm: FormGroup;
+  currentWeather: CurrentWeather | null = null;
+  isSearching = false;
+  sessionCityName: string = "";
+  dataForcasted: Forecast[] = [];
+  unit:string ="";
+  lang:string="";
+  city:string="";
 
-  constructor(private ws: WeatherService, private http: HttpClient) { }
-
-  ngOnInit(): void {
-    this.LoadData();
+  constructor(private ws: WeatherService, private http: HttpClient) {
     this.weatherForm = new FormGroup({
-      weatherCity: new FormControl(this.session, [Validators.required, Validators.minLength(4)]),
+      weatherCity: new FormControl(this.sessionCityName, [Validators.required, Validators.minLength(4)]),
       weatherUnit: new FormControl('metric', [Validators.required]),
       weatherLang: new FormControl('en')
     });
   }
 
+  ngOnInit(): void {
+    this.loadData();
+    //TODO Initialisation of the city
+  }
+
+  get cityFormValue():string{
+    return this.weatherForm.get("weatherCity")?.value
+  }
+
+  get unitFormValue():WeatherUnit{
+    return this.weatherForm.get("weatherUnit")?.value
+  }
+
+  get langFormValue():string{
+    return this.weatherForm.get("weatherLang")?.value
+  }
+
   /* Asynchronus function which collects the data from the form
   It's asynchronus to make sure the request to the API had the time to be made */
-  async ShowCity() {
-    this.DataFor.splice(0, this.DataFor.length);
-    this.city = this.weatherForm.value.weatherCity;
-    this.Unit = this.weatherForm.value.weatherUnit;
-    this.Lang = this.weatherForm.value.weatherLang;
+  async showCity() {
+    this.isSearching = true;
+    this.dataForcasted.splice(0, this.dataForcasted.length);
+    this.city=this.cityFormValue;
+    this.unit=this.unitFormValue;
+    this.lang=this.langFormValue;
     localStorage.setItem('SessionCC', JSON.stringify(this.city));
-    await this.ws.CityForecast(this.city, this.Unit, this.Lang)
-    this.DataFor = this.ws.DataFor;
-    await this.ws.CityWeather(this.city, this.Unit, this.Lang);
 
-    /* It is necessary to  to check and create the temperatures in celcius 
-    and farenheint because even passing the unit in the call of the API,
-    the temperatures are still not in the good unit */
-    if (this.Unit == 'metric') {
-      console.log('Data.name', this.ws.Data.name)
-      this.myWeather = new CurrentWeather(
-        this.ws.Data.name,
-        this.ws.Data.temp_celcius,
-        this.ws.Data.weather[0].icon,
-        this.ws.Data.weather[0].description)
-    }
+    /* old version */
+    //await this.ws.CityWeather(this.cityFormValue, this.unitFormValue, this.langFormValue);
 
-    else {
-      this.myWeather = new CurrentWeather(this.ws.Data.name,
-        this.ws.Data.temp_imperial,
-        this.ws.Data.weather[0].icon,
-        this.ws.Data.weather[0].description)
-    }
-    this.recherche = true;
+    this.ws.callWeatherCityApi(this.cityFormValue,
+      this.unitFormValue,
+      this.langFormValue)
+      .pipe(
+      finalize(()=> this.isSearching = false)
+    )
+      .subscribe(data => {
+        this.currentWeather = data;
+
+        if(this.unitFormValue == 'imperial'){
+          this.currentWeather.temp = ((this.currentWeather.temp - 273)* 9/5 + 32);
+        }
+        else{
+          this.currentWeather.temp = this.currentWeather.temp - 273;
+        }
+        console.log("this.currentWeather:", this.currentWeather);
+      });
+
+
+    await this.ws.CityForecast(this.cityFormValue, this.unitFormValue, this.langFormValue)
+    this.dataForcasted = this.ws.dataForcasted;
   }
 
   /* Function which allows to store in localStorage the last Latitude and Longitude selected by the user */
-  LoadData() {
-    let temporary: any;
-    temporary = localStorage.getItem('SessionCC');
-    this.session = JSON.parse(temporary);
+  loadData() {
+    let cityLocalyStored: string | null;
+    cityLocalyStored = localStorage.getItem('SessionCC');
+    if (cityLocalyStored){
+      this.sessionCityName = JSON.parse(cityLocalyStored);
+    }
   }
 }

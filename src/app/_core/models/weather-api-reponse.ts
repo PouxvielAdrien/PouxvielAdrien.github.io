@@ -8,6 +8,6 @@ interface WeatherData {
 export interface WeatherApiReponse {
     weather:WeatherData[];
     name:string;
-    main:{temp:number}
+    main:{temp:number, temp_min:number,temp_max:number}
 
 }

@@ -26,7 +26,7 @@ export class ForecastCoordComponent implements OnInit {
   recherche = false;
   myWeather = new CurrentWeather("", 0, "", "");
 
- 
+
   constructor(private ws:WeatherService) { }
 
   ngOnInit(): void {
@@ -35,7 +35,7 @@ export class ForecastCoordComponent implements OnInit {
       forecastLat: new FormControl(this.sessionLat),
       forecastLon: new FormControl(this.sessionLon),
       forecastUnit: new FormControl('metric'),
-      forecastLang: new FormControl('en')}) 
+      forecastLang: new FormControl('en')})
   }
 
   /* Asynchronus function which collects the data from the form
@@ -50,25 +50,25 @@ export class ForecastCoordComponent implements OnInit {
     localStorage.setItem('SessionFCoordLon', JSON.stringify(this.lon));
 
     await this.ws.CoordForecast(this.lat,this.lon, this.Unit, this.Lang);
-    this.DataFor = this.ws.DataFor;
+    this.DataFor = this.ws.dataForcasted;
 
     await this.ws.CoordWeather(this.lat, this.lon, this.Unit, this.Lang);
 
-    /* It is necessary to  to check and create the temperatures in celcius 
+    /* It is necessary to  to check and create the temperatures in celcius
     and farenheint because even passing the unit in the call of the API,
     the temperatures are still not in the good unit */
     if (this.Unit == 'metric') {
-      this.myWeather = new CurrentWeather(this.ws.Data.name,
-        this.ws.Data.temp_celcius,
-        this.ws.Data.weather[0].icon,
-        this.ws.Data.weather[0].description);
+      this.myWeather = new CurrentWeather(this.ws.apiReponseData.name,
+        this.ws.apiReponseData.temp_celcius,
+        this.ws.apiReponseData.weather[0].icon,
+        this.ws.apiReponseData.weather[0].description);
     }
 
     else {
-      this.myWeather = new CurrentWeather(this.ws.Data.name,
-        this.ws.Data.temp_imperial,
-        this.ws.Data.weather[0].icon,
-        this.ws.Data.weather[0].description);
+      this.myWeather = new CurrentWeather(this.ws.apiReponseData.name,
+        this.ws.apiReponseData.temp_imperial,
+        this.ws.apiReponseData.weather[0].icon,
+        this.ws.apiReponseData.weather[0].description);
     }
     this.recherche = true;
   }

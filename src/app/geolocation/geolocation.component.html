@@ -5,7 +5,7 @@
             <!-- Form to get data from the user -->
             <!-- Data Collected : Latitude and Longitude -->
             <div class="card text-center m-3">
-                <form [formGroup]="geoForm" (ngSubmit)="SubmitGeoLocation()" class="needs-validation m-3">
+                <form [formGroup]="geoForm" (ngSubmit)="onSubmitGeoLocation()" class="needs-validation m-3">
 
 
                     <!-- Data Collected : Unit -->
@@ -68,10 +68,10 @@
                     <h5 *ngIf="currentWeather.unit === 'imperial'">{{currentWeather.temp}}°F</h5>
                     <p class="card-text">{{currentWeather.weatherKind}}</p>
                     <img src="http://openweathermap.org/img/wn/{{currentWeather.icon}}@2x.png" class="img-fluid">
-                </div> 
+                </div>
             </div>
 
-            
+
         </div>
     </div>
 </div>
