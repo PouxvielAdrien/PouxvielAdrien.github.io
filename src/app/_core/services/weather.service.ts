@@ -8,7 +8,7 @@ import {
   API_WEATHER_URL,
   constructWeatherFromApiData,
   CurrentWeather,
-  Forecast,
+  Forecast, ForecastDto, ForecastFetch,
   WeatherApiResponse,
   WeatherUnit
 } from '../models';
@@ -24,7 +24,7 @@ export class WeatherService {
 
   /* Initialization of variables */
   apiReponseData: any;
-  dataForcasted: Forecast[] = [];
+  dataForcasted: ForecastFetch[] = [];
   answer: any;
 
   apiKey = '8a2870746354b988e645d9ae3f604075'
@@ -79,7 +79,7 @@ export class WeatherService {
   setForecastData(data: any) {
     this.apiReponseData = data;
     for (let i = 0; i <= (this.apiReponseData.list.length) - 1; i += 8) {
-      const temporary = new Forecast(this.apiReponseData.list[i].dt_txt,
+      const temporary = new ForecastFetch(this.apiReponseData.list[i].dt_txt,
         this.apiReponseData.list[i].weather[0].icon,
         this.apiReponseData.list[i].main.temp_max,
         this.apiReponseData.list[i].main.temp_min)
@@ -122,16 +122,16 @@ export class WeatherService {
       )
   }
 
-  callForecastCityApi(lat:number, lon:number, units: WeatherUnit, lang:string):Observable<CurrentWeather>{
+  callForecastCityApi(lat:number, lon:number, units: WeatherUnit, lang:string):Observable<Forecast>{
     let params = new HttpParams()
       .set('lat', lat)
       .set('lon', lon)
       .set('appid', this.apiKey)
       .set('units', units)
       .set('lang', lang)
-    return this.http.get<WeatherApiResponse>(API_FORECAST_URL, {params})
+    return this.http.get<ForecastDto>(API_FORECAST_URL, {params})
       .pipe(
-        map(response => constructWeatherFromApiData(response, lang, units))
+        map(response => new Forecast(response, lang, units))
       )
   }
 

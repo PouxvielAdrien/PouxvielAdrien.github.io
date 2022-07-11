@@ -1,19 +1,21 @@
-interface WeatherData {
+interface WeatherDataDto {
     description:string;
     icon:string;
 }
-interface ListData {
+interface ListDataDto {
   main:{temp_max:number, temp_min:number}
-  weather:WeatherData[];
+  weather:WeatherDataDto[];
   dt_txt:string;
 }
 
 export interface WeatherApiResponse {
-    weather:WeatherData[];
+    weather:WeatherDataDto[];
     name:string;
     main:{temp:number, temp_min:number, temp_max:number}
 }
 
-export interface ForecastApiResponse {
-  list:ListData[];
+export interface ForecastDto{
+  list:ListDataDto[];
 }
+
+// Complete ForecastDto with all Data received

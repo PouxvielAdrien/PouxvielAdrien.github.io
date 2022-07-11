@@ -7,7 +7,7 @@ import { CurrentWeather } from '../_core/models/current-weather';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Forecast } from '../_core/models/forecast';
 import {HttpClient, HttpParams, HttpParamsOptions} from '@angular/common/http';
-import {WeatherUnit} from "@core/models";
+import {ForecastFetch, WeatherUnit} from "@core/models";
 import {finalize} from "rxjs";
 import {Router, ActivatedRoute} from "@angular/router";
 
@@ -23,10 +23,10 @@ export class CurrentCityComponent implements OnInit {
   currentWeather: CurrentWeather | null = null;
   isSearching = false;
   sessionCityName: string = "";
-  dataForcasted: Forecast[] = [];
+  dataForcasted: ForecastFetch[] = [];
   unit:string ="";
   lang:string="";
-  city:string="";
+  cityFromQuery:string="";
 
   params: HttpParams | null = null;
 
@@ -38,14 +38,30 @@ export class CurrentCityComponent implements OnInit {
       weatherLang: new FormControl('en')
     });
   }
+  search(term: string): void {
+    this.router.navigate([], {queryParams: {search: term}});
+  }
 
   ngOnInit(): void {
     this.loadData();
-    this.weatherForm.setValue({weatherCity: this.sessionCityName, weatherUnit: "metric", weatherLang: "en" })
+    this.route.queryParams
+      .subscribe(params => {
+          console.log("queryparams", params);
+          this.cityFromQuery = params['city'];
+        console.log("cityQueryparams", this.cityFromQuery);
+        }
+      );
 
+    if (!this.cityFromQuery){
+      this.weatherForm.setValue({weatherCity: this.sessionCityName, weatherUnit: "metric", weatherLang: "en" })
 
-    //TODO Initialisation of the city
+    }
+    else{
+      this.weatherForm.setValue({weatherCity: this.cityFromQuery, weatherUnit: "metric", weatherLang: "en" })
+
+    }
   }
+
 
   get cityFormValue():string{
     return this.weatherForm.get("weatherCity")?.value
@@ -104,11 +120,13 @@ export class CurrentCityComponent implements OnInit {
   }
 
   public changingQueryParams() {
+
     this.router.navigate(
         ['/'],
-        {queryParams: {
+        {queryParams:{
             city: this.cityFormValue,
             unit: this.unitFormValue,
             lang: this.langFormValue}});
   }
 }
+

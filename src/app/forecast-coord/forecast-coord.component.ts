@@ -5,6 +5,7 @@ import { Component, OnInit } from '@angular/core';
 import {WeatherService} from '../_core/services/weather.service'
 import { FormGroup, FormControl } from '@angular/forms';
 import { Forecast } from '../_core/models/forecast';
+import { ForecastFetch } from '../_core/models/forecast-fetch';
 import { CurrentWeather } from '../_core/models/current-weather';
 
 @Component({
@@ -15,7 +16,7 @@ import { CurrentWeather } from '../_core/models/current-weather';
 export class ForecastCoordComponent implements OnInit {
 
   /* Initialization of variables */
-  DataFor: Forecast[] = [];
+  DataFor: ForecastFetch[] = [];
   forecastForm: any;
   lat:any;
   lon:any;
@@ -54,9 +55,6 @@ export class ForecastCoordComponent implements OnInit {
 
     await this.ws.CoordWeather(this.lat, this.lon, this.Unit, this.Lang);
 
-    /* It is necessary to  to check and create the temperatures in celcius
-    and farenheint because even passing the unit in the call of the API,
-    the temperatures are still not in the good unit */
 
 
 

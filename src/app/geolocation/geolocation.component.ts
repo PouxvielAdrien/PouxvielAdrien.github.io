@@ -4,6 +4,7 @@ import { CurrentWeather, WeatherApiResponse, WeatherService, WeatherUnit } from 
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Forecast } from '../_core/models/forecast';
 import { finalize } from 'rxjs';
+import {HttpParams} from "@angular/common/http";
 
 @Component({
   selector: 'app-geolocation',
@@ -17,6 +18,7 @@ export class GeolocationComponent {
   geoForm: FormGroup;
   locationDenied = true;
   isSearching = false;
+  params: HttpParams | null = null;
 
 
 
@@ -61,11 +63,19 @@ export class GeolocationComponent {
           }
         })
     }
-
+    this.changingQueryParams()
   }
 
   onSubmitGeoLocation() {
     this.setGeoLocation();
   }
 
+  changingQueryParams() {
+    this.params!
+      .set('unit', this.unitFormValue)
+      .set('lang', this.langFormValue)
+    console.log("query params : ",this.params);
+    console.log("GET",this.params!.get("city"));
+
+  }
 }
