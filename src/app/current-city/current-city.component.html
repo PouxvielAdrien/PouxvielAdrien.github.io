@@ -66,24 +66,24 @@
         <p *ngIf="!isSearching">Current Weather</p>
         <p *ngIf="isSearching" class="text-muted">Loading ...</p>
       </div>
-        <div class="card-body">
-            <h2 class="card-title">{{currentWeather.cityName}}</h2>
-            <h4 *ngIf="currentWeather.lang === 'en'">Current Weather</h4>
-            <h4 *ngIf="currentWeather.lang === 'fr'">Temps Actuel</h4>
-            <h5 *ngIf="currentWeather.unit === 'metric'" >{{currentWeather.temp  | number: '1.0-0' }}°C</h5>
-            <h5 *ngIf="currentWeather.unit === 'imperial'">{{currentWeather.temp  | number: '1.0-0' }}°F</h5>
-            <p class="card-text">{{currentWeather.weatherKind}}</p>
-            <img src="http://openweathermap.org/img/wn/{{currentWeather.icon}}@2x.png" class="img-fluid">
-        </div>
+      <div class="card-body">
+          <h2 class="card-title">{{currentWeather.cityName}}</h2>
+          <h4 *ngIf="currentWeather.lang === 'en'">Current Weather</h4>
+          <h4 *ngIf="currentWeather.lang === 'fr'">Temps Actuel</h4>
+          <h5 *ngIf="currentWeather.unit === 'metric'" >{{currentWeather.temp  | number: '1.0-0' }}°C</h5>
+          <h5 *ngIf="currentWeather.unit === 'imperial'">{{currentWeather.temp  | number: '1.0-0' }}°F</h5>
+          <p class="card-text">{{currentWeather.weatherKind}}</p>
+          <img src="http://openweathermap.org/img/wn/{{currentWeather.icon}}@2x.png" class="img-fluid">
+      </div>
 
         <div class="card-group" *ngIf=weathers>
             <div class="card" *ngFor="let Day of weathers, let i = index;">
                 <div class="card-body">
                   <h5>{{Day.date | date : 'shortDate'}}</h5>
-                  <h6 *ngIf="currentWeather.unit === 'metric'">Min : {{Day.tempMin}}°C</h6>
-                  <h6 *ngIf="currentWeather.unit === 'metric'">Max : {{Day.tempMax}}°C</h6>
-                  <h6 *ngIf="currentWeather.unit === 'imperial'">Min : {{Day.tempMin}}°F</h6>
-                  <h6 *ngIf="currentWeather.unit === 'imperial'">Max : {{Day.tempMax}}°F</h6>
+                  <h6 *ngIf="currentWeather.unit === 'metric'">Min : {{Day.tempMin | number: '1.0-0'}}°C</h6>
+                  <h6 *ngIf="currentWeather.unit === 'metric'">Max : {{Day.tempMax | number: '1.0-0'}}°C</h6>
+                  <h6 *ngIf="currentWeather.unit === 'imperial'">Min : {{Day.tempMin | number: '1.0-0'}}°F</h6>
+                  <h6 *ngIf="currentWeather.unit === 'imperial'">Max : {{Day.tempMax | number: '1.0-0'}}°F</h6>
                     <img class="img-fluid" src="http://openweathermap.org/img/wn/{{Day.icon}}@2x.png">
                 </div>
             </div>

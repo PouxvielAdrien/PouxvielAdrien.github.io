@@ -134,7 +134,31 @@ export class WeatherService {
       )
   }
 
+  getWeatherCoordApi(lat: string, lon:string, unit: WeatherUnit, lang: string):Observable<CurrentWeather>{
+    let params = new HttpParams()
+      .set('lat', lat)
+      .set('lon', lon)
+      .set('unit', unit)
+      .set('lang', lang)
+      .set('appid', this.apiKey)
+    return this.http.get<WeatherApiResponse>(API_WEATHER_URL, {params})
+      .pipe(
+        map(response => constructWeatherFromApiData(response, lang, unit))
+      )
+  }
 
+  getForecastCoordApi(lat: string, lon:string, units: WeatherUnit, lang:string):Observable<Forecast>{
+    let params = new HttpParams()
+      .set('lat', lat)
+      .set('lon', lon)
+      .set('appid', this.apiKey)
+      .set('units', units)
+      .set('lang', lang)
+    return this.http.get<ForecastDto>(API_FORECAST_URL, {params})
+      .pipe(
+        map(response => new Forecast(response, lang, units))
+      )
+  }
 
 
 

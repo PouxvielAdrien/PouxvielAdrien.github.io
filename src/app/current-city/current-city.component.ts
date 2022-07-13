@@ -21,16 +21,13 @@ export class CurrentCityComponent implements OnInit, OnDestroy {
 
   /* Initialization of variables */
   weatherForm: FormGroup;
-  currentWeather: CurrentWeather | null = null;
   isSearching = false;
   sessionCityName: string = "";
-  dataForcasted: ForecastFetch[] = [];
-  unit:string ="";
-  lang:string="";
-  private queryParamsSubscription: Subscription | null = null;
-
+  currentWeather: CurrentWeather | null = null;
   weathers:Weather[] | null = null;
   params: HttpParams | null = null;
+  private queryParamsSubscription: Subscription | null = null;
+
 
 
   constructor(private ws: WeatherService, private http: HttpClient, private router:Router, private route:ActivatedRoute) {
@@ -43,19 +40,10 @@ export class CurrentCityComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loadData();
-    console.log("BONJOUUUUUUUR");
-
-    /* TEST REFACTOR CALLING API WITH HTTPMODULECLIENT */
-    this.ws.getForecastCityApi("Lyon",'metric', 'en')
-      .subscribe(data => {
-      console.log("Forecast",data)});
-
-
     this.queryParamsSubscription = this.route.queryParamMap
       .subscribe(params => {
-          console.log("queryparams", params);
+          //console.log("queryparams", params);
         const city = params.get('city');
-
         if (city){
           this.weatherForm.setValue({weatherCity: city, weatherUnit: "metric", weatherLang: "en" })
         }
@@ -83,12 +71,10 @@ export class CurrentCityComponent implements OnInit, OnDestroy {
 
   /* Asynchronus function which collects the data from the form
   It's asynchronus to make sure the request to the API had the time to be made */
-  async showCity() {
+  showCity() {
     this.isSearching = true;
-    this.dataForcasted.splice(0, this.dataForcasted.length);
+    //this.dataForcasted.splice(0, this.dataForcasted.length);
     localStorage.setItem('SessionCC', JSON.stringify(this.cityFormValue));
-
-
 
     /* old version */
     //await this.ws.CityWeather(this.cityFormValue, this.unitFormValue, this.langFormValue);
@@ -121,12 +107,12 @@ export class CurrentCityComponent implements OnInit, OnDestroy {
         finalize(()=> this.isSearching = false)
       )
       .subscribe(data => {
+        console.log("Data: ", data)
         this.weathers = data.weathers;
         console.log("WEATHERS_city_Component", this.weathers)});
 
     this.changingQueryParams()
-     }
-
+   }
 
   /* Function which allows to store in localStorage the last Latitude and Longitude selected by the user */
   loadData() {
@@ -137,13 +123,14 @@ export class CurrentCityComponent implements OnInit, OnDestroy {
     }
   }
 
-  public changingQueryParams() {
+  changingQueryParams() {
     this.router.navigate(
-        ['/'],
+        [],
         {queryParams:{
             city: this.cityFormValue,
             unit: this.unitFormValue,
-            lang: this.langFormValue}});
+            lang: this.langFormValue},
+          relativeTo: this.route});
   }
 }
 
