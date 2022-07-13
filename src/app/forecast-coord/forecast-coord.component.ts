@@ -50,6 +50,8 @@ export class ForecastCoordComponent implements OnInit {
     localStorage.setItem('SessionFCoordLat', JSON.stringify(this.lat));
     localStorage.setItem('SessionFCoordLon', JSON.stringify(this.lon));
 
+
+
     await this.ws.CoordForecast(this.lat,this.lon, this.Unit, this.Lang);
     this.DataFor = this.ws.dataForcasted;
 

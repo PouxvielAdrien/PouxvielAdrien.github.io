@@ -1,22 +1,23 @@
 /* WEATHER CITY COMPONENT */
 
 /* Import the application components and services */
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import { WeatherService } from '../_core/services/weather.service'
 import { CurrentWeather } from '../_core/models/current-weather';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Forecast } from '../_core/models/forecast';
-import {HttpClient, HttpParams, HttpParamsOptions} from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import {ForecastFetch, WeatherUnit} from "@core/models";
-import {finalize} from "rxjs";
+import {finalize, Subscription} from "rxjs";
 import {Router, ActivatedRoute} from "@angular/router";
+import {Weather} from "@core/models";
 
 @Component({
   selector: 'app-current-city',
   templateUrl: './current-city.component.html',
   styleUrls: ['./current-city.component.css']
 })
-export class CurrentCityComponent implements OnInit {
+export class CurrentCityComponent implements OnInit, OnDestroy {
 
   /* Initialization of variables */
   weatherForm: FormGroup;
@@ -26,8 +27,9 @@ export class CurrentCityComponent implements OnInit {
   dataForcasted: ForecastFetch[] = [];
   unit:string ="";
   lang:string="";
-  cityFromQuery:string="";
+  private queryParamsSubscription: Subscription | null = null;
 
+  weathers:Weather[] | null = null;
   params: HttpParams | null = null;
 
 
@@ -38,30 +40,34 @@ export class CurrentCityComponent implements OnInit {
       weatherLang: new FormControl('en')
     });
   }
-  search(term: string): void {
-    this.router.navigate([], {queryParams: {search: term}});
-  }
 
   ngOnInit(): void {
     this.loadData();
-    this.route.queryParams
+    console.log("BONJOUUUUUUUR");
+
+    /* TEST REFACTOR CALLING API WITH HTTPMODULECLIENT */
+    this.ws.getForecastCityApi("Lyon",'metric', 'en')
+      .subscribe(data => {
+      console.log("Forecast",data)});
+
+
+    this.queryParamsSubscription = this.route.queryParamMap
       .subscribe(params => {
           console.log("queryparams", params);
-          this.cityFromQuery = params['city'];
-        console.log("cityQueryparams", this.cityFromQuery);
+        const city = params.get('city');
+
+        if (city){
+          this.weatherForm.setValue({weatherCity: city, weatherUnit: "metric", weatherLang: "en" })
         }
-      );
-
-    if (!this.cityFromQuery){
-      this.weatherForm.setValue({weatherCity: this.sessionCityName, weatherUnit: "metric", weatherLang: "en" })
-
-    }
-    else{
-      this.weatherForm.setValue({weatherCity: this.cityFromQuery, weatherUnit: "metric", weatherLang: "en" })
-
-    }
+        else{
+          this.weatherForm.setValue({weatherCity: this.sessionCityName, weatherUnit: "metric", weatherLang: "en" })
+        }
+      });
   }
 
+  ngOnDestroy(): void{
+    this.queryParamsSubscription?.unsubscribe();
+  }
 
   get cityFormValue():string{
     return this.weatherForm.get("weatherCity")?.value
@@ -87,7 +93,7 @@ export class CurrentCityComponent implements OnInit {
     /* old version */
     //await this.ws.CityWeather(this.cityFormValue, this.unitFormValue, this.langFormValue);
 
-    this.ws.callWeatherCityApi(this.cityFormValue,
+    this.ws.getWeatherCityApi(this.cityFormValue,
       this.unitFormValue,
       this.langFormValue)
       .pipe(
@@ -104,11 +110,23 @@ export class CurrentCityComponent implements OnInit {
         console.log("this.currentWeather:", this.currentWeather);
       });
 
-    await this.ws.CityForecast(this.cityFormValue, this.unitFormValue, this.langFormValue)
-    this.dataForcasted = this.ws.dataForcasted;
-    this.changingQueryParams()
+    // await this.ws.CityForecast(this.cityFormValue, this.unitFormValue, this.langFormValue)
+    // this.dataForcasted = this.ws.dataForcasted;
 
+    this.ws.getForecastCityApi(
+      this.cityFormValue,
+      this.unitFormValue,
+      this.langFormValue)
+      .pipe(
+        finalize(()=> this.isSearching = false)
+      )
+      .subscribe(data => {
+        this.weathers = data.weathers;
+        console.log("WEATHERS_city_Component", this.weathers)});
+
+    this.changingQueryParams()
      }
+
 
   /* Function which allows to store in localStorage the last Latitude and Longitude selected by the user */
   loadData() {
@@ -120,7 +138,6 @@ export class CurrentCityComponent implements OnInit {
   }
 
   public changingQueryParams() {
-
     this.router.navigate(
         ['/'],
         {queryParams:{

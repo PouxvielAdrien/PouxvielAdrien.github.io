@@ -96,7 +96,7 @@ export class WeatherService {
       })
   }
 
-  /* HTTP CALLS */
+  /***** Angular HttpClientModule for API calls *****/
   getWeatherByLocation(lat:number, lon:number, units: WeatherUnit, lang:string):Observable<CurrentWeather>{
     let params = new HttpParams()
     .set('lat', lat)
@@ -110,7 +110,7 @@ export class WeatherService {
       )
   }
 
-  callWeatherCityApi(city: string, unit: WeatherUnit, lang: string):Observable<CurrentWeather>{
+  getWeatherCityApi(city: string, unit: WeatherUnit, lang: string):Observable<CurrentWeather>{
     let params = new HttpParams()
       .set('q', city)
       .set('unit', unit)
@@ -122,10 +122,9 @@ export class WeatherService {
       )
   }
 
-  callForecastCityApi(lat:number, lon:number, units: WeatherUnit, lang:string):Observable<Forecast>{
+  getForecastCityApi(city:string, units: WeatherUnit, lang:string):Observable<Forecast>{
     let params = new HttpParams()
-      .set('lat', lat)
-      .set('lon', lon)
+      .set('q', city)
       .set('appid', this.apiKey)
       .set('units', units)
       .set('lang', lang)
@@ -134,8 +133,6 @@ export class WeatherService {
         map(response => new Forecast(response, lang, units))
       )
   }
-
-
 
 
 

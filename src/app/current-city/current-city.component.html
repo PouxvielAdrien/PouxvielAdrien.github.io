@@ -63,7 +63,7 @@
 
     <div class="card text-center" *ngIf="currentWeather">
       <div class="card-header">
-        <p *ngIf="!isSearching">Geolocation Weather</p>
+        <p *ngIf="!isSearching">Current Weather</p>
         <p *ngIf="isSearching" class="text-muted">Loading ...</p>
       </div>
         <div class="card-body">
@@ -76,14 +76,14 @@
             <img src="http://openweathermap.org/img/wn/{{currentWeather.icon}}@2x.png" class="img-fluid">
         </div>
 
-        <div class="card-group">
-            <div class="card" *ngFor="let Day of dataForcasted, let i = index;">
+        <div class="card-group" *ngIf=weathers>
+            <div class="card" *ngFor="let Day of weathers, let i = index;">
                 <div class="card-body">
-                    <h5>{{Day?.day | date : 'shortDate'}}</h5>
-                    <h6 *ngIf="currentWeather.unit === 'metric'">Min : {{Day.tempMin}}°C</h6>
-                    <h6 *ngIf="currentWeather.unit === 'metric'">Max : {{Day.tempMax}}°C</h6>
-                    <h6 *ngIf="currentWeather.unit === 'imperial'">Min : {{Day.tempMin}}°F</h6>
-                    <h6 *ngIf="currentWeather.unit === 'imperial'">Max : {{Day.tempMax}}°F</h6>
+                  <h5>{{Day.date | date : 'shortDate'}}</h5>
+                  <h6 *ngIf="currentWeather.unit === 'metric'">Min : {{Day.tempMin}}°C</h6>
+                  <h6 *ngIf="currentWeather.unit === 'metric'">Max : {{Day.tempMax}}°C</h6>
+                  <h6 *ngIf="currentWeather.unit === 'imperial'">Min : {{Day.tempMin}}°F</h6>
+                  <h6 *ngIf="currentWeather.unit === 'imperial'">Max : {{Day.tempMax}}°F</h6>
                     <img class="img-fluid" src="http://openweathermap.org/img/wn/{{Day.icon}}@2x.png">
                 </div>
             </div>
