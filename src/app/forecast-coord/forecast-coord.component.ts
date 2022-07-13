@@ -5,7 +5,6 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {WeatherService} from '../_core/services/weather.service'
 import {FormGroup, FormControl, Validators} from '@angular/forms';
 import { Forecast } from '../_core/models/forecast';
-import { ForecastFetch } from '../_core/models/forecast-fetch';
 import { CurrentWeather } from '../_core/models/current-weather';
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {ActivatedRoute, Router} from "@angular/router";
@@ -80,7 +79,7 @@ export class ForecastCoordComponent implements OnInit, OnDestroy {
     return this.forecastForm.get("forecastLang")?.value
   }
 
-  ShowForecast(){
+  showForecast(){
     // this.DataFor.splice(0,this.DataFor.length);
     this.isSearching = true;
     localStorage.setItem('SessionLat', JSON.stringify(this.latFormValue));

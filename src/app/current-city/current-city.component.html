@@ -77,14 +77,14 @@
       </div>
 
         <div class="card-group" *ngIf=weathers>
-            <div class="card" *ngFor="let Day of weathers, let i = index;">
+            <div class="card" *ngFor="let day of weathers, let i = index;">
                 <div class="card-body">
-                  <h5>{{Day.date | date : 'shortDate'}}</h5>
-                  <h6 *ngIf="currentWeather.unit === 'metric'">Min : {{Day.tempMin | number: '1.0-0'}}°C</h6>
-                  <h6 *ngIf="currentWeather.unit === 'metric'">Max : {{Day.tempMax | number: '1.0-0'}}°C</h6>
-                  <h6 *ngIf="currentWeather.unit === 'imperial'">Min : {{Day.tempMin | number: '1.0-0'}}°F</h6>
-                  <h6 *ngIf="currentWeather.unit === 'imperial'">Max : {{Day.tempMax | number: '1.0-0'}}°F</h6>
-                    <img class="img-fluid" src="http://openweathermap.org/img/wn/{{Day.icon}}@2x.png">
+                  <h5>{{day.date | date : 'shortDate'}}</h5>
+                  <h6 *ngIf="currentWeather.unit === 'metric'">Min : {{day.tempMin | number: '1.0-0'}}°C</h6>
+                  <h6 *ngIf="currentWeather.unit === 'metric'">Max : {{day.tempMax | number: '1.0-0'}}°C</h6>
+                  <h6 *ngIf="currentWeather.unit === 'imperial'">Min : {{day.tempMin | number: '1.0-0'}}°F</h6>
+                  <h6 *ngIf="currentWeather.unit === 'imperial'">Max : {{day.tempMax | number: '1.0-0'}}°F</h6>
+                    <img class="img-fluid" src="http://openweathermap.org/img/wn/{{day.icon}}@2x.png">
                 </div>
             </div>
         </div>

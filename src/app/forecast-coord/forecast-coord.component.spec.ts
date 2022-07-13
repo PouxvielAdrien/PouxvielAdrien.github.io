@@ -38,7 +38,7 @@ describe('ForecastCoordComponent', () => {
     spyOn(component, 'ShowForecast');
     el = fixture.debugElement.query(By.css('button')).nativeElement;
     el.click();
-    expect(component.ShowForecast).toHaveBeenCalledTimes(0);
+    expect(component.showForecast).toHaveBeenCalledTimes(0);
   });
 
   /* Expect the form valid property to be false */

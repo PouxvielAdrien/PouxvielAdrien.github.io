@@ -27,15 +27,12 @@ export class Forecast {
       }
     })
 
-    /** 6 unique dates **/
-    //console.log("UNIQUE DATES :",uniqueDates);
+    /** 6 unique datesm weatherData for each Day **/
     uniqueDates.forEach(uD=>{
       const weathersDataForDate = forecastDto.list.filter(e => {
         const date = new Date (e.dt_txt)
         return date.getDate() == uD.getDate()
       })
-       /** weatherData for each Day **/
-       //console.log("weathersForDate",weathersDataForDate)
 
       /** Keep only tempMin and tempMax for each day **/
         const  tempMin=weathersDataForDate.reduce((wfd1, wfd2)=>{
@@ -56,20 +53,10 @@ export class Forecast {
         }
       }).main.temp_min
 
-
-        // console.log("tempMin : ", tempMin)
-        // console.log("tempMax : ", tempMax)
-        //TODO put tempMin and Max in an object that will be put in an array (1 Day per object)
         weathersDataForDate[0].main.temp_min = tempMin
         weathersDataForDate[0].main.temp_max = tempMax
-        // console.log("weathersDataForDate[0]",weathersDataForDate[0])
-
         this.weathers.push(new Weather(weathersDataForDate[0]))
-        // console.log("sixDaysWeatherData",this.sixDaysWeatherData)
-        // console.log("First Day temp Min",this.sixDaysWeatherData[0].main.temp_min)
-
     })
-    //console.log("WEATHERS",this.weathers)
   }
 }
 

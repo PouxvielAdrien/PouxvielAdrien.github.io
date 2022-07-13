@@ -7,7 +7,7 @@ import { CurrentWeather } from '../_core/models/current-weather';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Forecast } from '../_core/models/forecast';
 import {HttpClient, HttpParams} from '@angular/common/http';
-import {ForecastFetch, WeatherUnit} from "@core/models";
+import {WeatherUnit} from "@core/models";
 import {finalize, Subscription} from "rxjs";
 import {Router, ActivatedRoute} from "@angular/router";
 import {Weather} from "@core/models";
