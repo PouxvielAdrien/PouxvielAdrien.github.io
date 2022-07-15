@@ -4,8 +4,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {WeatherService} from '../_core/services/weather.service'
 import {FormGroup, FormControl, Validators} from '@angular/forms';
-import { Forecast } from '../_core/models/forecast';
-import { CurrentWeather } from '../_core/models/current-weather';
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Weather, WeatherUnit} from "@core/models";
@@ -19,18 +17,14 @@ import {finalize, Subscription} from "rxjs";
 export class ForecastCoordComponent implements OnInit, OnDestroy {
 
   /* Initialization of variables */
-  //DataFor: ForecastFetch[] = [];
   forecastForm: FormGroup;
   isSearching = false;
 
   sessionLat: number = 0;
   sessionLon: number = 0;
 
-  //myWeather = new CurrentWeather("", 0,0,0,"", "");
-
-  currentWeather: CurrentWeather | null = null;
+  currentWeather: Weather | null = null;
   weathers:Weather[] | null = null;
-  params: HttpParams | null = null;
   private queryParamsSubscription: Subscription | null = null;
 
   constructor(private ws:WeatherService, private http: HttpClient, private router:Router, private route:ActivatedRoute) {
@@ -89,7 +83,7 @@ export class ForecastCoordComponent implements OnInit, OnDestroy {
     // this.DataFor = this.ws.dataForcasted;
     // await this.ws.CoordWeather(this.lat, this.lon, this.Unit, this.Lang);
 
-  this.ws.getWeatherCoordApi(
+  this.ws.getCurrentWeatherWithCoordApi(
     this.latFormValue,
     this.lonFormValue,
     this.unitFormValue,
@@ -100,17 +94,13 @@ export class ForecastCoordComponent implements OnInit, OnDestroy {
     .subscribe(data => {
       this.currentWeather = data;
       console.log("DATA Current Weather", data)
-      if(this.unitFormValue == 'imperial'){
-        this.currentWeather.temp = ((this.currentWeather.temp - 273)* 9/5 + 32);
-      }
-      else{
-        this.currentWeather.temp = this.currentWeather.temp - 273;
-      }
+
+
       console.log("this.currentWeather:", this.currentWeather);
     });
 
 
-    this.ws.getForecastCoordApi(
+    this.ws.getForecastWithCoordApi(
       this.latFormValue,
       this.lonFormValue,
       this.unitFormValue,
@@ -120,7 +110,7 @@ export class ForecastCoordComponent implements OnInit, OnDestroy {
       )
       .subscribe(data => {
         console.log("Data: ", data)
-        this.weathers = data.weathers;
+        this.weathers = data;
         console.log("WEATHERS_city_Component", this.weathers)});
 
     this.changingQueryParams()

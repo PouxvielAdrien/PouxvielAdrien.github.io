@@ -70,9 +70,9 @@
           <h2 class="card-title">{{currentWeather.cityName}}</h2>
           <h4 *ngIf="currentWeather.lang === 'en'">Current Weather</h4>
           <h4 *ngIf="currentWeather.lang === 'fr'">Temps Actuel</h4>
-          <h5 *ngIf="currentWeather.unit === 'metric'" >{{currentWeather.temp  | number: '1.0-0' }}°C</h5>
-          <h5 *ngIf="currentWeather.unit === 'imperial'">{{currentWeather.temp  | number: '1.0-0' }}°F</h5>
-          <p class="card-text">{{currentWeather.weatherKind}}</p>
+          <h5 *ngIf="currentWeather.unit === 'metric'" >{{currentWeather.tempCurrent  | number: '1.0-0' }}°C</h5>
+          <h5 *ngIf="currentWeather.unit === 'imperial'">{{currentWeather.tempCurrent  | number: '1.0-0' }}°F</h5>
+          <p class="card-text">{{currentWeather.weatherDescription}}</p>
           <img src="http://openweathermap.org/img/wn/{{currentWeather.icon}}@2x.png" class="img-fluid">
       </div>
 

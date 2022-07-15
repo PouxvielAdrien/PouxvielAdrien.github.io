@@ -11,7 +11,8 @@ export interface WeatherDto {
     humidity: number,
     temp_kf: number
   };
-  weather:{id:number;
+  weather:{
+    id:number;
     main:string;
     description:string;
     icon:string}[];
@@ -28,9 +29,23 @@ export interface WeatherDto {
     pod:string;
   };
   dt_txt:string;
+  name:string;
 }
 
 
 export interface ForecastDto {
   list: WeatherDto[];
+  city: {
+    id: number,
+    name: string,
+    coord: {
+      lat: number
+      lon: number
+    },
+    country: string,
+    population: number,
+    timezone: number,
+    sunrise: number,
+    sunset: number
+  }
 }

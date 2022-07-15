@@ -8,8 +8,8 @@ export class Forecast {
 
 
   constructor(forecastDto: ForecastDto,
-               lang:string="en",
-               unit:WeatherUnit="metric"){
+               lang:string,
+               unit:WeatherUnit){
 
 
    /** list.dt_txt -> dates of type Date. Return dates **/
@@ -55,7 +55,7 @@ export class Forecast {
 
         weathersDataForDate[0].main.temp_min = tempMin
         weathersDataForDate[0].main.temp_max = tempMax
-        this.weathers.push(new Weather(weathersDataForDate[0]))
+        this.weathers.push(new Weather(weathersDataForDate[0], forecastDto.city.name, unit, lang))
     })
   }
 }

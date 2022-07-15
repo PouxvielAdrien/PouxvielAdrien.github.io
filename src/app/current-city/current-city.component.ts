@@ -3,9 +3,8 @@
 /* Import the application components and services */
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import { WeatherService } from '../_core/services/weather.service'
-import { CurrentWeather } from '../_core/models/current-weather';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { Forecast } from '../_core/models/forecast';
+
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {WeatherUnit} from "@core/models";
 import {finalize, Subscription} from "rxjs";
@@ -23,9 +22,8 @@ export class CurrentCityComponent implements OnInit, OnDestroy {
   weatherForm: FormGroup;
   isSearching = false;
   sessionCityName: string = "";
-  currentWeather: CurrentWeather | null = null;
+  currentWeather: Weather | null = null;
   weathers:Weather[] | null = null;
-  params: HttpParams | null = null;
   private queryParamsSubscription: Subscription | null = null;
 
 
@@ -79,7 +77,7 @@ export class CurrentCityComponent implements OnInit, OnDestroy {
     /* old version */
     //await this.ws.CityWeather(this.cityFormValue, this.unitFormValue, this.langFormValue);
 
-    this.ws.getWeatherCityApi(this.cityFormValue,
+    this.ws.getCurrentWeatherWithCityApi(this.cityFormValue,
       this.unitFormValue,
       this.langFormValue)
       .pipe(
@@ -87,19 +85,14 @@ export class CurrentCityComponent implements OnInit, OnDestroy {
       )
       .subscribe(data => {
         this.currentWeather = data;
-        if(this.unitFormValue == 'imperial'){
-          this.currentWeather.temp = ((this.currentWeather.temp - 273)* 9/5 + 32);
-        }
-        else{
-          this.currentWeather.temp = this.currentWeather.temp - 273;
-        }
+
         console.log("this.currentWeather:", this.currentWeather);
       });
 
     // await this.ws.CityForecast(this.cityFormValue, this.unitFormValue, this.langFormValue)
     // this.dataForcasted = this.ws.dataForcasted;
 
-    this.ws.getForecastCityApi(
+    this.ws.getForecastWeatherWithCityApi(
       this.cityFormValue,
       this.unitFormValue,
       this.langFormValue)
