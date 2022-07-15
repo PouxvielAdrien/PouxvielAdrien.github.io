@@ -8,7 +8,7 @@ export class Weather {
   icon:string|null =null;
   date:Date|null=null;
   cityName:string|null = null;
-  weatherDescription: string | null = null;
+  description: string | null = null;
   lang:string|null = null;
   unit:string|null = null;
 
@@ -20,7 +20,7 @@ export class Weather {
     this.icon = weatherDto.weather[0].icon;
     this.date =  new Date(weatherDto.dt_txt);
     this.cityName = weatherDto.name || defaultCityName;
-    this.weatherDescription = weatherDto.weather[0].description;
+    this.description = weatherDto.weather[0].description;
     this.unit=unit;
     this.lang=lang;
   }

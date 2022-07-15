@@ -34,6 +34,9 @@ export interface WeatherDto {
 
 
 export interface ForecastDto {
+  cod: number,
+  message: number,
+  cnt: number,
   list: WeatherDto[];
   city: {
     id: number,

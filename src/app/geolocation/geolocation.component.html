@@ -66,7 +66,7 @@
                     <h4 *ngIf="currentWeather.lang === 'fr'">Temps Actuel</h4>
                     <h5 *ngIf="currentWeather.unit === 'metric'">{{currentWeather.tempCurrent}}°C</h5>
                     <h5 *ngIf="currentWeather.unit === 'imperial'">{{currentWeather.tempCurrent}}°F</h5>
-                    <p class="card-text">{{currentWeather.weatherDescription}}</p>
+                    <p class="card-text">{{currentWeather.description}}</p>
                     <img src="http://openweathermap.org/img/wn/{{currentWeather.icon}}@2x.png" class="img-fluid">
                 </div>
             </div>
