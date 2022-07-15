@@ -54,9 +54,10 @@ export class WeatherService {
       .set('units', unit)
       .set('lang', lang)
       .set('appid', this.apiKey)
-    return this.http.get<WeatherDto>(API_WEATHER_URL, {params})
+    return this.http.get<ForecastDto>(API_FORECAST_URL, {params})
       .pipe(
-        map(response => new Weather(response,'city', unit, lang))
+        map(response => new Forecast(response, lang, unit)),
+        map(forecast => forecast.weathers[0])
       )
 
   }
