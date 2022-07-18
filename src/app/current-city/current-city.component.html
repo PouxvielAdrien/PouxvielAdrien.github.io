@@ -5,7 +5,7 @@
             <!-- Form to get data from the user -->
             <!-- Data Collected : City Name -->
         <div class="card text-center m-3">
-                <form [formGroup]="weatherForm" (ngSubmit)="ShowCity()" class="needs-validation">
+                <form [formGroup]="weatherForm" (ngSubmit)="showCity()" class="needs-validation">
                     <div class="row justify-content-center">
                         <div class="col-10">
                             <div class="input-group input-group-lg p-3">
@@ -21,7 +21,7 @@
                         <div class="col-4">
                             <div class="form-floating">
                                 <select id="units" class="form-select" name="units" id="floatingUnit"
-                                    formControlName="weatherUnit">
+                                    formControlName="weatherUnit"  bindQueryParam="unit" >
                                     <option value="metric"> metric </option>
                                     <option value="imperial"> imperial </option>
                                 </select>
@@ -61,29 +61,30 @@
 
 
 
-    <div class="card text-center" *ngIf="recherche === true">
-        <div class="card-header">
-            <p>Forecast Weather</p>
-        </div>
-        <div class="card-body">
-            <h2 class="card-title">{{myWeather.cityName}}</h2>
-            <h4 *ngIf="Lang === 'en'">Current Weather</h4>
-            <h4 *ngIf="Lang === 'fr'">Temps Actuel</h4>
-            <h5 *ngIf="Unit === 'metric'" >{{myWeather.temp}}°C</h5>
-            <h5 *ngIf="Unit === 'imperial'">{{myWeather.temp}}°F</h5>
-            <p class="card-text">{{myWeather.weatherKind}}</p>
-            <img src="http://openweathermap.org/img/wn/{{myWeather.icon}}@2x.png" class="img-fluid">
-        </div>             
-        
-        <div class="card-group">
-            <div class="card" *ngFor="let Day of DataFor, let i = index;">
+    <div class="card text-center" *ngIf="currentWeather">
+      <div class="card-header">
+        <p *ngIf="!isSearching">Current Weather</p>
+        <p *ngIf="isSearching" class="text-muted">Loading ...</p>
+      </div>
+      <div class="card-body">
+          <h2 class="card-title">{{currentWeather.cityName}}</h2>
+          <h4 *ngIf="currentWeather.lang === 'en'">Current Weather</h4>
+          <h4 *ngIf="currentWeather.lang === 'fr'">Temps Actuel</h4>
+          <h5 *ngIf="currentWeather.unit === 'metric'" >{{currentWeather.tempCurrent  | number: '1.0-0' }}°C</h5>
+          <h5 *ngIf="currentWeather.unit === 'imperial'">{{currentWeather.tempCurrent  | number: '1.0-0' }}°F</h5>
+          <p class="card-text">{{currentWeather.description}}</p>
+          <img src="http://openweathermap.org/img/wn/{{currentWeather.icon}}@2x.png" class="img-fluid">
+      </div>
+
+        <div class="card-group" *ngIf=weathers>
+            <div class="card" *ngFor="let day of weathers, let i = index;">
                 <div class="card-body">
-                    <h5>{{Day?.day | date : 'shortDate'}}</h5>
-                    <h6 *ngIf="Unit === 'metric'">Min : {{Day.tempMin}}°C</h6>
-                    <h6 *ngIf="Unit === 'metric'">Max : {{Day.tempMax}}°C</h6>
-                    <h6 *ngIf="Unit === 'imperial'">Min : {{Day.tempMin}}°F</h6>
-                    <h6 *ngIf="Unit === 'imperial'">Max : {{Day.tempMax}}°F</h6>
-                    <img class="img-fluid" src="http://openweathermap.org/img/wn/{{Day.icon}}@2x.png">
+                  <h5>{{day.date | date : 'shortDate'}}</h5>
+                  <h6 *ngIf="currentWeather.unit === 'metric'">Min : {{day.tempMin | number: '1.0-0'}}°C</h6>
+                  <h6 *ngIf="currentWeather.unit === 'metric'">Max : {{day.tempMax | number: '1.0-0'}}°C</h6>
+                  <h6 *ngIf="currentWeather.unit === 'imperial'">Min : {{day.tempMin | number: '1.0-0'}}°F</h6>
+                  <h6 *ngIf="currentWeather.unit === 'imperial'">Max : {{day.tempMax | number: '1.0-0'}}°F</h6>
+                    <img class="img-fluid" src="http://openweathermap.org/img/wn/{{day.icon}}@2x.png">
                 </div>
             </div>
         </div>

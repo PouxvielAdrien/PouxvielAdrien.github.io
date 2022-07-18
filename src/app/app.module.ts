@@ -30,7 +30,7 @@ import { GeolocationComponent } from './geolocation/geolocation.component';
     AppRoutingModule,
     FormsModule,
     ReactiveFormsModule,
-    HttpClientModule
+    HttpClientModule,
   ],
   providers: [
     WeatherService,

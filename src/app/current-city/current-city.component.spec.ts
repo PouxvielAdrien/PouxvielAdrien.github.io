@@ -31,8 +31,8 @@ describe('CurrentCityComponent', () => {
 
   /* Check if the component instance has the expected value of the 'recherche' variable after the call of the method 'ShowCoord' */
   it('should have set recherche to true', async() => {
-    component.ShowCity()
-    expect(component.recherche.valueOf).toBeTruthy();
+    component.showCity()
+    expect(component.isSearching.valueOf).toBeTruthy();
   });
 
   /* Check if the spy function is not executed because the button is disabled since the form is not valid */
@@ -41,7 +41,7 @@ describe('CurrentCityComponent', () => {
     spyOn(component, 'ShowCity');
     el = fixture.debugElement.query(By.css('button')).nativeElement;
     el.click();
-    expect(component.ShowCity).toHaveBeenCalledTimes(0);
+    expect(component.showCity).toHaveBeenCalledTimes(0);
   });
 
   /* Expect the form valid property to be false */
@@ -61,5 +61,5 @@ describe('CurrentCityComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
- 
+
 });

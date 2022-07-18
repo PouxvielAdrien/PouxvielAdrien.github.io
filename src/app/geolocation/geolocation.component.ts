@@ -1,9 +1,11 @@
 /* Import the application components and services */
 import { Component, OnInit } from '@angular/core';
-import { CurrentWeather, WeatherApiReponse, WeatherService, WeatherUnit } from '../_core'
+import { WeatherService, WeatherUnit } from '../_core'
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { Forecast } from '../_core/models/forecast';
+import {Weather} from "../_core";
 import { finalize } from 'rxjs';
+import {HttpParams} from "@angular/common/http";
+import {ActivatedRoute, Router} from "@angular/router";
 
 @Component({
   selector: 'app-geolocation',
@@ -13,17 +15,18 @@ import { finalize } from 'rxjs';
 export class GeolocationComponent {
 
 
-  currentWeather: CurrentWeather | null = null;
+  currentWeather: Weather | null = null;
   geoForm: FormGroup;
   locationDenied = true;
   isSearching = false;
+  params: HttpParams | null = null;
 
 
 
-  constructor(private ws: WeatherService) { 
+  constructor(private ws: WeatherService, private router:Router, private route:ActivatedRoute) {
     this.geoForm = new FormGroup({
       geoUnit: new FormControl('metric'),
-      geoLang: new FormControl('fr')
+      geoLang: new FormControl('en')
     });
   }
 
@@ -36,14 +39,14 @@ export class GeolocationComponent {
     return this.geoForm.get("geoLang")?.value
   }
 
-  SetGeoLocation() {
+  setGeoLocation() {
     if ("geolocation" in navigator) {
       this.isSearching = true;
       navigator.geolocation.getCurrentPosition(
         (succes) => {
-          this.ws.getWeatherByLocation(succes.coords.latitude, 
+          this.ws.getWeatherByLocation(succes.coords.latitude,
             succes.coords.longitude,
-             this.unitFormValue, 
+             this.unitFormValue,
              this.langFormValue)
              .pipe(
               finalize(()=> this.isSearching = false)
@@ -61,11 +64,19 @@ export class GeolocationComponent {
           }
         })
     }
-    
+    this.changingQueryParams()
   }
 
-  SubmitGeoLocation() {
-    this.SetGeoLocation();
+  onSubmitGeoLocation() {
+    this.setGeoLocation();
   }
 
+  changingQueryParams() {
+    this.router.navigate(
+      [],
+      {queryParams:{
+          unit: this.unitFormValue,
+          lang: this.langFormValue},
+        relativeTo: this.route});
+  }
 }

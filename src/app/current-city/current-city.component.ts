@@ -1,79 +1,129 @@
-/* CURRENT WEATHER (CITY) COMPONENT */
+/* WEATHER CITY COMPONENT */
 
 /* Import the application components and services */
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import { WeatherService } from '../_core/services/weather.service'
-import { CurrentWeather } from '../_core/models/current-weather';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { Forecast } from '../_core/models/forecast';
-import { HttpClient } from '@angular/common/http';
 
+import {HttpClient, HttpParams} from '@angular/common/http';
+import {WeatherUnit} from "@core/models";
+import {finalize, Subscription} from "rxjs";
+import {Router, ActivatedRoute} from "@angular/router";
+import {Weather} from "@core/models";
 
 @Component({
   selector: 'app-current-city',
   templateUrl: './current-city.component.html',
   styleUrls: ['./current-city.component.css']
 })
-export class CurrentCityComponent implements OnInit {
+export class CurrentCityComponent implements OnInit, OnDestroy {
 
   /* Initialization of variables */
-  weatherForm: any;
-  myWeather = new CurrentWeather("", 0, "", "");
-  city: any;
-  Unit: any;
-  Lang: any;
-  recherche = false;
-  session: any;
-  DataFor: Forecast[] = [];
+  weatherForm: FormGroup;
+  isSearching = false;
+  sessionCityName: string = "";
+  currentWeather: Weather | null = null;
+  weathers:Weather[] | null = null;
+  private queryParamsSubscription: Subscription | null = null;
 
-  constructor(private ws: WeatherService, private http: HttpClient) { }
 
-  ngOnInit(): void {
-    this.LoadData();
+
+  constructor(private ws: WeatherService, private http: HttpClient, private router:Router, private route:ActivatedRoute) {
     this.weatherForm = new FormGroup({
-      weatherCity: new FormControl(this.session, [Validators.required, Validators.minLength(4)]),
-      weatherUnit: new FormControl('metric', [Validators.required]),
+      weatherCity: new FormControl("", [Validators.required, Validators.minLength(4)]),
+      weatherUnit: new FormControl('metric'),
       weatherLang: new FormControl('en')
     });
   }
 
+  ngOnInit(): void {
+    this.loadData();
+    this.queryParamsSubscription = this.route.queryParamMap
+      .subscribe(params => {
+          //console.log("queryparams", params);
+        const city = params.get('city');
+        if (city){
+          this.weatherForm.setValue({weatherCity: city, weatherUnit: "metric", weatherLang: "en" })
+        }
+        else{
+          this.weatherForm.setValue({weatherCity: this.sessionCityName, weatherUnit: "metric", weatherLang: "en" })
+        }
+      });
+  }
+
+  ngOnDestroy(): void{
+    this.queryParamsSubscription?.unsubscribe();
+  }
+
+  get cityFormValue():string{
+    return this.weatherForm.get("weatherCity")?.value
+  }
+
+  get unitFormValue():WeatherUnit{
+    return this.weatherForm.get("weatherUnit")?.value
+  }
+
+  get langFormValue():string{
+    return this.weatherForm.get("weatherLang")?.value
+  }
+
   /* Asynchronus function which collects the data from the form
   It's asynchronus to make sure the request to the API had the time to be made */
-  async ShowCity() {
-    this.DataFor.splice(0, this.DataFor.length);
-    this.city = this.weatherForm.value.weatherCity;
-    this.Unit = this.weatherForm.value.weatherUnit;
-    this.Lang = this.weatherForm.value.weatherLang;
-    localStorage.setItem('SessionCC', JSON.stringify(this.city));
-    await this.ws.CityForecast(this.city, this.Unit, this.Lang)
-    this.DataFor = this.ws.DataFor;
-    await this.ws.CityWeather(this.city, this.Unit, this.Lang);
+  showCity() {
+    this.isSearching = true;
+    //this.dataForcasted.splice(0, this.dataForcasted.length);
+    localStorage.setItem('SessionCC', JSON.stringify(this.cityFormValue));
 
-    /* It is necessary to  to check and create the temperatures in celcius 
-    and farenheint because even passing the unit in the call of the API,
-    the temperatures are still not in the good unit */
-    if (this.Unit == 'metric') {
-      console.log('Data.name', this.ws.Data.name)
-      this.myWeather = new CurrentWeather(
-        this.ws.Data.name,
-        this.ws.Data.temp_celcius,
-        this.ws.Data.weather[0].icon,
-        this.ws.Data.weather[0].description)
-    }
+    /* old version */
+    //await this.ws.CityWeather(this.cityFormValue, this.unitFormValue, this.langFormValue);
 
-    else {
-      this.myWeather = new CurrentWeather(this.ws.Data.name,
-        this.ws.Data.temp_imperial,
-        this.ws.Data.weather[0].icon,
-        this.ws.Data.weather[0].description)
-    }
-    this.recherche = true;
-  }
+    this.ws.getCurrentWeatherWithCityApi(this.cityFormValue,
+      this.unitFormValue,
+      this.langFormValue)
+      .pipe(
+      finalize(()=> this.isSearching = false)
+      )
+      .subscribe(data => {
+        this.currentWeather = data;
+
+        console.log("this.currentWeather:", this.currentWeather);
+      });
+
+    // await this.ws.CityForecast(this.cityFormValue, this.unitFormValue, this.langFormValue)
+    // this.dataForcasted = this.ws.dataForcasted;
+
+    this.ws.getForecastWeatherWithCityApi(
+      this.cityFormValue,
+      this.unitFormValue,
+      this.langFormValue)
+      .pipe(
+        finalize(()=> this.isSearching = false)
+      )
+      .subscribe(data => {
+        console.log("Data: ", data)
+        this.weathers = data.weathers;
+        console.log("WEATHERS_city_Component", this.weathers)});
+
+    this.changingQueryParams()
+   }
 
   /* Function which allows to store in localStorage the last Latitude and Longitude selected by the user */
-  LoadData() {
-    let temporary: any;
-    temporary = localStorage.getItem('SessionCC');
-    this.session = JSON.parse(temporary);
+  loadData() {
+    let cityLocalyStored: string | null;
+    cityLocalyStored = localStorage.getItem('SessionCC');
+    if (cityLocalyStored){
+      this.sessionCityName = JSON.parse(cityLocalyStored);
+    }
+  }
+
+  changingQueryParams() {
+    this.router.navigate(
+        [],
+        {queryParams:{
+            city: this.cityFormValue,
+            unit: this.unitFormValue,
+            lang: this.langFormValue},
+          relativeTo: this.route});
   }
 }
+
