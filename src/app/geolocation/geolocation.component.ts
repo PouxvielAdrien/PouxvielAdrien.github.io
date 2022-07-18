@@ -1,10 +1,11 @@
 /* Import the application components and services */
 import { Component, OnInit } from '@angular/core';
-import { CurrentWeather, WeatherApiResponse, WeatherService, WeatherUnit } from '../_core'
+import { WeatherService, WeatherUnit } from '../_core'
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { Forecast } from '../_core/models/forecast';
+import {Weather} from "../_core";
 import { finalize } from 'rxjs';
 import {HttpParams} from "@angular/common/http";
+import {ActivatedRoute, Router} from "@angular/router";
 
 @Component({
   selector: 'app-geolocation',
@@ -14,7 +15,7 @@ import {HttpParams} from "@angular/common/http";
 export class GeolocationComponent {
 
 
-  currentWeather: CurrentWeather | null = null;
+  currentWeather: Weather | null = null;
   geoForm: FormGroup;
   locationDenied = true;
   isSearching = false;
@@ -22,7 +23,7 @@ export class GeolocationComponent {
 
 
 
-  constructor(private ws: WeatherService) {
+  constructor(private ws: WeatherService, private router:Router, private route:ActivatedRoute) {
     this.geoForm = new FormGroup({
       geoUnit: new FormControl('metric'),
       geoLang: new FormControl('en')
@@ -71,11 +72,11 @@ export class GeolocationComponent {
   }
 
   changingQueryParams() {
-    this.params!
-      .set('unit', this.unitFormValue)
-      .set('lang', this.langFormValue)
-    console.log("query params : ",this.params);
-    console.log("GET",this.params!.get("city"));
-
+    this.router.navigate(
+      [],
+      {queryParams:{
+          unit: this.unitFormValue,
+          lang: this.langFormValue},
+        relativeTo: this.route});
   }
 }
