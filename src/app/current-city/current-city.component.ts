@@ -26,6 +26,8 @@ export class CurrentCityComponent implements OnInit, OnDestroy {
   weathers:Weather[] | null = null;
   private queryParamsSubscription: Subscription | null = null;
 
+  favoriteCities: string[] =[];
+
 
 
   constructor(private ws: WeatherService, private http: HttpClient, private router:Router, private route:ActivatedRoute) {
@@ -69,7 +71,7 @@ export class CurrentCityComponent implements OnInit, OnDestroy {
 
   /* Asynchronus function which collects the data from the form
   It's asynchronus to make sure the request to the API had the time to be made */
-  showCity() {
+  onShowWeather() {
     this.isSearching = true;
     //this.dataForcasted.splice(0, this.dataForcasted.length);
     localStorage.setItem('SessionCC', JSON.stringify(this.cityFormValue));
@@ -124,6 +126,14 @@ export class CurrentCityComponent implements OnInit, OnDestroy {
             unit: this.unitFormValue,
             lang: this.langFormValue},
           relativeTo: this.route});
+  }
+
+  onSaveCities() {
+    console.log("favoriteCities before : ", this.favoriteCities)
+    this.favoriteCities?.push(this.cityFormValue);
+    console.log("favoriteCities after : ", this.favoriteCities)
+
+    //Todo : if a city is already in the favorite list
   }
 }
 

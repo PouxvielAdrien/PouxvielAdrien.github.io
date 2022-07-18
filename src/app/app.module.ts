@@ -2,6 +2,8 @@
 
 /* Import the application components and modules */
 import { NgModule } from '@angular/core';
+import{NgbDropdownModule} from "@ng-bootstrap/ng-bootstrap";
+import{NgbModule} from "@ng-bootstrap/ng-bootstrap";
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
@@ -23,7 +25,8 @@ import { GeolocationComponent } from './geolocation/geolocation.component';
     CurrentCityComponent,
     ForecastCoordComponent,
     NotfoundComponent,
-    GeolocationComponent
+    GeolocationComponent,
+
   ],
   imports: [
     BrowserModule,
@@ -31,6 +34,7 @@ import { GeolocationComponent } from './geolocation/geolocation.component';
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
+    NgbModule
   ],
   providers: [
     WeatherService,
