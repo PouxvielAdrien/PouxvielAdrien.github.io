@@ -27,7 +27,7 @@ export class Forecast {
       }
     })
 
-    /** 6 unique datesm weatherData for each Day **/
+    /** 6 unique dates weatherData for each Day **/
     uniqueDates.forEach(uD=>{
       const weathersDataForDate = forecastDto.list.filter(e => {
         const date = new Date (e.dt_txt)

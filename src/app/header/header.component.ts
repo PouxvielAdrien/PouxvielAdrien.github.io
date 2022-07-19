@@ -1,6 +1,7 @@
 /* HEADER COMPONENT */
 
 import { Component, OnInit } from '@angular/core';
+import {FavoritesCitiesService} from "@core/services/favorites-cities.service";
 
 @Component({
   selector: 'app-header',
@@ -9,9 +10,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HeaderComponent implements OnInit {
 
-  constructor() { }
+  constructor(protected fc: FavoritesCitiesService) { }
 
   ngOnInit(): void {
+  }
+
+  onPickFavCity(favoriteCityPicked:string){
+    this.fc.onPickFavCity(favoriteCityPicked)
   }
 
 }

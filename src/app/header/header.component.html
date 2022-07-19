@@ -14,6 +14,14 @@
                 <li class="nav-item"><a routerLink="City" class="nav-link"> City </a></li>
                 <li class="nav-item"><a routerLink="Coord" class="nav-link"> Coordinates </a></li>
                 <li class="nav-item"><a routerLink="Geolocation" class="nav-link"> Geolocation </a></li>
+
+                <div ngbDropdown>
+                  <button type="button" class="btn btn-light" id="dropdownBasic1" ngbDropdownToggle >Favorites Cities</button>
+                  <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                    <button ngbDropdownItem *ngFor="let favoriteCity of fc.favoritesCities, let i = index;" (click)="onPickFavCity(favoriteCity)"> {{favoriteCity}}</button>
+                  </div>
+                </div>
+
             </ul>
         </div>
     </div>

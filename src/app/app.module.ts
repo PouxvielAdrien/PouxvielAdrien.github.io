@@ -16,6 +16,7 @@ import { CurrentCityComponent } from './current-city/current-city.component';
 import { ForecastCoordComponent } from './forecast-coord/forecast-coord.component';
 import { NotfoundComponent } from './notfound/notfound.component';
 import { GeolocationComponent } from './geolocation/geolocation.component';
+import {FavoritesCitiesService} from "@core/services/favorites-cities.service";
 
 
 @NgModule({
@@ -38,6 +39,7 @@ import { GeolocationComponent } from './geolocation/geolocation.component';
   ],
   providers: [
     WeatherService,
+    FavoritesCitiesService
   ],
   bootstrap: [AppComponent]
 })

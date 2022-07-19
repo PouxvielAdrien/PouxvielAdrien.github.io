@@ -10,6 +10,7 @@ import {WeatherUnit} from "@core/models";
 import {finalize, Subscription} from "rxjs";
 import {Router, ActivatedRoute} from "@angular/router";
 import {Weather} from "@core/models";
+import {FavoritesCitiesService} from "@core/services/favorites-cities.service";
 
 @Component({
   selector: 'app-current-city',
@@ -22,15 +23,20 @@ export class CurrentCityComponent implements OnInit, OnDestroy {
   weatherForm: FormGroup;
   isSearching = false;
   sessionCityName: string = "";
+  researchNotDone = true;
+
+  sessionFavCityName: string[] =[];
+
   currentWeather: Weather | null = null;
   weathers:Weather[] | null = null;
   private queryParamsSubscription: Subscription | null = null;
 
-  favoriteCities: string[] =[];
+  constructor(private ws: WeatherService,
+              private http: HttpClient,
+              private router:Router,
+              private route:ActivatedRoute,
+              protected fc: FavoritesCitiesService) {
 
-
-
-  constructor(private ws: WeatherService, private http: HttpClient, private router:Router, private route:ActivatedRoute) {
     this.weatherForm = new FormGroup({
       weatherCity: new FormControl("", [Validators.required, Validators.minLength(4)]),
       weatherUnit: new FormControl('metric'),
@@ -69,8 +75,6 @@ export class CurrentCityComponent implements OnInit, OnDestroy {
     return this.weatherForm.get("weatherLang")?.value
   }
 
-  /* Asynchronus function which collects the data from the form
-  It's asynchronus to make sure the request to the API had the time to be made */
   onShowWeather() {
     this.isSearching = true;
     //this.dataForcasted.splice(0, this.dataForcasted.length);
@@ -106,15 +110,30 @@ export class CurrentCityComponent implements OnInit, OnDestroy {
         this.weathers = data.weathers;
         console.log("WEATHERS_city_Component", this.weathers)});
 
-    this.changingQueryParams()
+    this.changingQueryParams();
+    this.researchNotDone = false;
+    this.fc.onCheckIfCityIsInList(this.fc.favoritesCities, this.cityFormValue);
+
+
    }
 
   /* Function which allows to store in localStorage the last Latitude and Longitude selected by the user */
   loadData() {
     let cityLocalyStored: string | null;
+    let favCitiesLocalyStored: string[] = [];
+    let favCity: string | null;
     cityLocalyStored = localStorage.getItem('SessionCC');
+    favCity = localStorage.getItem('sessionFavCity');
+    favCitiesLocalyStored.push(favCity!);
+    console.log("favCityLocalyStored",favCitiesLocalyStored);
     if (cityLocalyStored){
       this.sessionCityName = JSON.parse(cityLocalyStored);
+    }
+    if (favCity){
+      this.sessionFavCityName = JSON.parse(favCity);
+      console.log("sessionFavCityName",this.sessionFavCityName);
+      this.fc.favoritesCities = this.sessionFavCityName;
+      console.log("favoriteCities", this.fc.favoritesCities);
     }
   }
 
@@ -128,12 +147,17 @@ export class CurrentCityComponent implements OnInit, OnDestroy {
           relativeTo: this.route});
   }
 
-  onSaveCities() {
-    console.log("favoriteCities before : ", this.favoriteCities)
-    this.favoriteCities?.push(this.cityFormValue);
-    console.log("favoriteCities after : ", this.favoriteCities)
+  onSaveCities(){
+    this.fc.onSaveCities(this.fc.favoritesCities, this.cityFormValue)
+    this.fc.onCheckIfCityIsInList(this.fc.favoritesCities, this.cityFormValue)
+  }
 
-    //Todo : if a city is already in the favorite list
+  onPickFavCity(favoriteCityPicked:string){
+    this.fc.onPickFavCity(favoriteCityPicked)
+  }
+
+  onNewResearch(){
+    this.researchNotDone = true;
   }
 }
 
