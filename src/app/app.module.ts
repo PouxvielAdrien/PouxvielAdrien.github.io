@@ -17,6 +17,8 @@ import { ForecastCoordComponent } from './forecast-coord/forecast-coord.componen
 import { NotfoundComponent } from './notfound/notfound.component';
 import { GeolocationComponent } from './geolocation/geolocation.component';
 import {FavoritesCitiesService} from "@core/services/favorites-cities.service";
+import { FormComponent } from './form/form.component';
+import { DisplayComponent } from './display/display.component';
 
 
 @NgModule({
@@ -27,6 +29,8 @@ import {FavoritesCitiesService} from "@core/services/favorites-cities.service";
     ForecastCoordComponent,
     NotfoundComponent,
     GeolocationComponent,
+    FormComponent,
+    DisplayComponent,
 
   ],
   imports: [

@@ -6,18 +6,15 @@ import {Router, ActivatedRoute} from "@angular/router";
 })
 export class FavoritesCitiesService {
 
-  favoritesCities: string[] =["Lyon"];
+  favoritesCities: string[] =[];
   iconFullFill = false;
 
   constructor(private router:Router,
               private route:ActivatedRoute,) {}
 
   onSaveCities(listOfFavoritesCities:string[], cityToAdd:string) {
-    console.log("favoriteCities before Add: ", listOfFavoritesCities)
-
     if((!listOfFavoritesCities.includes(cityToAdd)) && listOfFavoritesCities.length<=5){
       listOfFavoritesCities.push(cityToAdd)
-      console.log("New city added")
     }
     else{
       const index: number = listOfFavoritesCities.indexOf(cityToAdd);
@@ -25,16 +22,11 @@ export class FavoritesCitiesService {
         listOfFavoritesCities.splice(index, 1);
       }
     }
-    console.log("favoriteCities after Add: ", listOfFavoritesCities)
+    this.favoritesCities=listOfFavoritesCities;
+    localStorage.setItem('sessionFavCity', JSON.stringify(this.favoritesCities));
   }
 
-  /**
-   * Todo :
-   *        one click to submit
-   */
-
   onPickFavCity(favoriteCityPicked:string){
-    console.log("City chosen")
     this.router.navigate(
       [],
       {queryParams:{
