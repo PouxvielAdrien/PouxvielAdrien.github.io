@@ -29,6 +29,7 @@
 <router-outlet *ngIf="headerResearch"></router-outlet>
 
 <app-display *ngIf="!headerResearch"
+             [typeOfForm]="typeOfForm"
              [displayResearchFromForm]="headerResearch"
              [cityNameFromForm]="cityPicked!"
              [unitFromForm]="defaultUnit"

@@ -15,8 +15,9 @@ export class HeaderComponent implements OnInit {
   defaultLang="en";
   cityPicked:string|null=null;
   sessionFavCityName: string[] =[];
-  cityOnInit:string[] = [];
 
+  // Todo Put this variable from the form child
+  typeOfForm:string ='';
 
   @Output() formEvent = new EventEmitter<boolean>();
 
@@ -29,6 +30,7 @@ export class HeaderComponent implements OnInit {
   onPickFavCity(favoriteCityPicked:string){
     this.cityPicked=favoriteCityPicked;
     this.fc.onPickFavCity(favoriteCityPicked)
+    this.typeOfForm = 'city';
     this.headerResearch=false;
   }
 
