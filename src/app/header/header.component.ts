@@ -2,7 +2,8 @@
 
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {FavoritesCitiesService} from "@core/services/favorites-cities.service";
-import {WeatherUnit} from "@core/models";
+import {TYPE_OF_FORM, WeatherUnit} from "@core/models";
+import {ActivatedRoute, Router} from "@angular/router";
 
 @Component({
   selector: 'app-header',
@@ -10,18 +11,18 @@ import {WeatherUnit} from "@core/models";
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent implements OnInit {
-  headerResearch = true;
-  defaultUnit:WeatherUnit="metric";
-  defaultLang="en";
-  cityPicked:string|null=null;
-  sessionFavCityName: string[] =[];
-
-  // Todo Put this variable from the form child
-  typeOfForm:string ='';
 
   @Output() formEvent = new EventEmitter<boolean>();
+  cityPicked:string|null=null;
+  defaultLang="en";
+  defaultUnit:WeatherUnit="metric";
+  headerResearch = true;
+  sessionFavCityName: string[] =[];
+  readonly TYPE_OF_FORM= TYPE_OF_FORM;
 
-  constructor(protected fc: FavoritesCitiesService) { }
+  constructor(protected fc: FavoritesCitiesService,
+              private router:Router,
+              private route:ActivatedRoute,) { }
 
   ngOnInit(): void {
     this.loadCities();
@@ -29,14 +30,11 @@ export class HeaderComponent implements OnInit {
 
   onPickFavCity(favoriteCityPicked:string){
     this.cityPicked=favoriteCityPicked;
-    this.fc.onPickFavCity(favoriteCityPicked)
-    this.typeOfForm = 'city';
-    this.headerResearch=false;
-  }
-
-  onNewResearch(stateOfResearch: boolean){
-    this.headerResearch = stateOfResearch;
-    this.formEvent.emit(this.headerResearch)
+    this.router.navigate(
+      ["/favorites"],
+      {queryParams:{
+          city: favoriteCityPicked},
+        });
   }
 
   loadCities() {

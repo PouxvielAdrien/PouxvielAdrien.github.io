@@ -1,5 +1,5 @@
-import {Component, Input, OnDestroy, OnInit, Output, EventEmitter} from '@angular/core';
-import {Weather, WeatherUnit} from "@core/models";
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {ContentOfForm, TYPE_OF_FORM, Weather, WeatherUnit} from "@core/models";
 import {WeatherService} from "@core/services/weather.service";
 import {HttpClient} from "@angular/common/http";
 import {ActivatedRoute, Router} from "@angular/router";
@@ -12,21 +12,19 @@ import {finalize, Subscription} from "rxjs";
   styleUrls: ['./display.component.css']
 })
 export class DisplayComponent implements OnInit, OnDestroy {
-  @Input() cityNameFromForm = '';
-  @Input() latFromForm = '';
-  @Input() lonFromForm = '';
-  @Input() unitFromForm:WeatherUnit|null=null;
-  @Input() langFromForm = '';
-  @Input() displayResearchFromForm :boolean|null=null;
-  @Output() newResearchEvent = new EventEmitter<boolean>();
-  @Input() typeOfForm = '';
 
-  isSearching = false;
+  @Input() contentOfForm:ContentOfForm |null=null;
+  @Input() favCityPicked:string = "";
+  @Input() typeOfForm: TYPE_OF_FORM | null = null;
+  @Output() newFormDisplay = new EventEmitter<ContentOfForm>();
   currentWeather: Weather | null = null;
-  weathers:Weather[] | null = null;
-  sessionFavCityName: string[] =[];
-  public queryParamsSubscription: Subscription | null = null;
+  isSearching = false;
   locationDenied = true;
+  queryParamsSubscription: Subscription | null = null;
+  sessionFavCityName: string[] =[];
+  weathers:Weather[] | null = null;
+  readonly TYPE_OF_FORM = TYPE_OF_FORM;
+
 
   constructor(private ws: WeatherService,
               private http: HttpClient,
@@ -35,100 +33,125 @@ export class DisplayComponent implements OnInit, OnDestroy {
               protected fc: FavoritesCitiesService) {}
 
   ngOnInit(): void {
-    if(this.typeOfForm =='city'){
-      this.isSearching = true;
-      localStorage.setItem('cityLocalyStored', JSON.stringify(this.cityNameFromForm));
-      if(!this.displayResearchFromForm){
-        this.ws.getCurrentWeatherWithCityApi(this.cityNameFromForm,
-          this.unitFromForm!,
-          this.langFromForm)
-          .pipe(
-            finalize(()=> this.isSearching = false)
-          )
-          .subscribe(data => {
-            this.currentWeather = data;
-          });
+    switch(this.typeOfForm) {
+      case TYPE_OF_FORM.CITY: {
+        this.isSearching = true;
+        localStorage.setItem('cityLocalyStored', JSON.stringify(this.contentOfForm?.weatherCity));
+          this.ws.getCurrentWeatherWithCityApi(
+            this.contentOfForm?.weatherCity!,
+            this.contentOfForm?.weatherUnit!,
+            this.contentOfForm?.weatherLang!)
+            .pipe(
+              finalize(()=> this.isSearching = false)
+            )
+            .subscribe(data => {
+              this.currentWeather = data,
+              this.fc.onCheckIfFavCityForColorOfStar(this.fc.favoritesCities, this.currentWeather.cityName!);
+            });
 
-        this.ws.getForecastWeatherWithCityApi(
-          this.cityNameFromForm,
-          this.unitFromForm!,
-          this.langFromForm)
-          .pipe(
-            finalize(()=> this.isSearching = false)
-          )
-          .subscribe(data => {
-            this.weathers = data.weathers;});
+          this.ws.getForecastWeatherWithCityApi(
+            this.contentOfForm?.weatherCity!,
+            this.contentOfForm?.weatherUnit!,
+            this.contentOfForm?.weatherLang!)
+            .pipe(
+              finalize(()=> this.isSearching = false)
+            )
+            .subscribe(data => {
+              this.weathers = data.weathers;
+            });
 
-        this.changingQueryParams();
-        this.displayResearchFromForm = false;
-        this.fc.onCheckIfCityIsInList(this.fc.favoritesCities, this.cityNameFromForm);
+          this.changingQueryParams();
+        break;
       }
-    }
 
-    if(this.typeOfForm =='coord'){
-      this.isSearching = true;
-      localStorage.setItem('SessionLat', JSON.stringify(this.latFromForm));
-      localStorage.setItem('SessionLon', JSON.stringify(this.lonFromForm));
-      if(!this.displayResearchFromForm){
+      case TYPE_OF_FORM.COORD: {
+        this.isSearching = true;
+        localStorage.setItem('SessionLat', JSON.stringify(this.contentOfForm?.weatherLat!));
+        localStorage.setItem('SessionLon', JSON.stringify(this.contentOfForm?.weatherLon!));
+          this.ws.getCurrentWeatherWithCoordApi(
+            this.contentOfForm?.weatherLat!,
+            this.contentOfForm?.weatherLon!,
+            this.contentOfForm?.weatherUnit!,
+            this.contentOfForm?.weatherLang!)
+            .pipe(
+              finalize(()=> this.isSearching = false)
+            )
+            .subscribe(data => {
+              this.currentWeather = data,
+                this.fc.onCheckIfFavCityForColorOfStar(this.fc.favoritesCities, this.currentWeather.cityName!);
+            });
 
-        this.ws.getCurrentWeatherWithCoordApi(
-          this.latFromForm,
-          this.lonFromForm,
-          this.unitFromForm!,
-          this.langFromForm)
+          this.ws.getForecastWithCoordApi(
+            this.contentOfForm?.weatherLat!,
+            this.contentOfForm?.weatherLon!,
+            this.contentOfForm?.weatherUnit!,
+            this.contentOfForm?.weatherLang!)
+            .pipe(
+              finalize(()=> this.isSearching = false)
+            )
+            .subscribe(data => {
+              this.weathers = data;
+            });
+          this.changingQueryParams();
+        break;
+      }
+
+      case TYPE_OF_FORM.LOCATION: {
+        if ("geolocation" in navigator) {
+          this.isSearching = true;
+          navigator.geolocation.getCurrentPosition(
+            (succes) => {
+              this.ws.getWeatherByLocation(succes.coords.latitude,
+                succes.coords.longitude,
+                this.contentOfForm!.weatherUnit,
+                this.contentOfForm!.weatherLang)
+                .pipe(
+                  finalize(()=> this.isSearching = false)
+                )
+                .subscribe(data => {
+                  this.currentWeather = data,
+                    this.fc.onCheckIfFavCityForColorOfStar(this.fc.favoritesCities, this.currentWeather.cityName!);
+
+                });
+            },
+            (error) => {
+              this.isSearching = false;
+              if (error.code == error.PERMISSION_DENIED) {
+                this.locationDenied = false;
+                //TODO manage errors
+              }
+            })
+        }
+        this.changingQueryParams()
+        break;
+      }
+
+      case TYPE_OF_FORM.FAVORITE: {
+        this.isSearching = true;
+        this.ws.getCurrentWeatherWithCityApi(
+          this.favCityPicked,
+          "metric",
+          "en")
           .pipe(
             finalize(()=> this.isSearching = false)
           )
           .subscribe(data => {
             this.currentWeather = data,
-            this.fc.onCheckIfCityIsInList(this.fc.favoritesCities, this.currentWeather.cityName!);
+              this.fc.onCheckIfFavCityForColorOfStar(this.fc.favoritesCities, this.currentWeather.cityName!);
           });
 
-        this.ws.getForecastWithCoordApi(
-          this.latFromForm,
-          this.lonFromForm,
-          this.unitFromForm!,
-          this.langFromForm)
+        this.ws.getForecastWeatherWithCityApi(
+          this.favCityPicked,
+          "metric",
+          "en")
           .pipe(
             finalize(()=> this.isSearching = false)
           )
           .subscribe(data => {
-            console.log("Data: ", data)
-            this.weathers = data;
+            this.weathers = data.weathers;
           });
-        this.changingQueryParams()
-        this.displayResearchFromForm = false;
+        break;
       }
-    }
-
-    if (this.typeOfForm == 'location'){
-      if ("geolocation" in navigator) {
-        this.isSearching = true;
-        navigator.geolocation.getCurrentPosition(
-          (succes) => {
-            this.ws.getWeatherByLocation(succes.coords.latitude,
-              succes.coords.longitude,
-              this.unitFromForm!,
-              this.langFromForm)
-              .pipe(
-                finalize(()=> this.isSearching = false)
-              )
-              .subscribe(data => {
-                this.currentWeather = data,
-                this.fc.onCheckIfCityIsInList(this.fc.favoritesCities, this.currentWeather.cityName!);
-
-              });
-          },
-
-          (error) => {
-            this.isSearching = false;
-            if (error.code == error.PERMISSION_DENIED) {
-              this.locationDenied = false;
-              //TODO manage errors
-            }
-          })
-      }
-      this.changingQueryParams()
     }
   }
 
@@ -138,48 +161,64 @@ export class DisplayComponent implements OnInit, OnDestroy {
 
   onSaveCities(){
     this.fc.onSaveCities(this.fc.favoritesCities, this.currentWeather!.cityName!)
-    this.fc.onCheckIfCityIsInList(this.fc.favoritesCities, this.currentWeather!.cityName!)
-  }
-
-  onPickFavCity(favoriteCityPicked:string){
-    this.fc.onPickFavCity(favoriteCityPicked)
+    this.fc.onCheckIfFavCityForColorOfStar(this.fc.favoritesCities, this.currentWeather!.cityName!)
   }
 
   onNewResearch(){
-    this.displayResearchFromForm = true;
-    this.newResearchEvent.emit(this.displayResearchFromForm);
+    switch(this.typeOfForm) {
+      case TYPE_OF_FORM.CITY: {
+        this.contentOfForm!.weatherCity = "";
+        break;
+      }
+      case TYPE_OF_FORM.COORD: {
+        this.contentOfForm!.weatherLat = "";
+        this.contentOfForm!.weatherLon = "";
+        break;
+      }
+
+      case TYPE_OF_FORM.LOCATION: {
+        this.contentOfForm!.weatherUnit = "";
+        this.contentOfForm!.weatherLang = "";
+        break;
+
+      }
+    }
+    this.newFormDisplay.emit(this.contentOfForm!)
   }
 
   changingQueryParams() {
-    if(this.typeOfForm =='city'){
-      this.router.navigate(
-        [],
-        {queryParams:{
-            city: this.cityNameFromForm,
-            unit: this.unitFromForm,
-            lang: this.langFromForm},
-          relativeTo: this.route});
-    }
+    switch(this.typeOfForm) {
+      case TYPE_OF_FORM.CITY: {
+        this.router.navigate(
+          [],
+          {queryParams:{
+              city: this.contentOfForm?.weatherCity,
+              unit: this.contentOfForm?.weatherUnit,
+              lang: this.contentOfForm?.weatherLang},
+            relativeTo: this.route});
+        break;
+      }
 
-    if(this.typeOfForm =='coord'){
-      this.router.navigate(
-        [],
-        {queryParams:{
-            lat: this.latFromForm,
-            lon: this.lonFromForm,
-            unit: this.unitFromForm,
-            lang: this.langFromForm},
-          relativeTo: this.route});
+      case TYPE_OF_FORM.COORD: {
+        this.router.navigate(
+          [],
+          {queryParams:{
+              lat: this.contentOfForm?.weatherLat,
+              lon: this.contentOfForm?.weatherLon,
+              unit: this.contentOfForm?.weatherUnit,
+              lang: this.contentOfForm?.weatherLang},
+            relativeTo: this.route});
+        break;
+      }
+      case TYPE_OF_FORM.LOCATION: {
+        this.router.navigate(
+          [],
+          {queryParams:{
+              unit: this.contentOfForm?.weatherUnit,
+              lang: this.contentOfForm?.weatherLang},
+            relativeTo: this.route});
+        break;
+      }
     }
-
-    if(this.typeOfForm =='location'){
-      this.router.navigate(
-        [],
-        {queryParams:{
-            unit: this.unitFromForm,
-            lang: this.langFromForm},
-          relativeTo: this.route});
-    }
-
   }
 }

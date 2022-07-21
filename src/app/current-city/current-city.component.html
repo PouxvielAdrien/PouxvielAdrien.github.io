@@ -1,3 +1,15 @@
-<app-form [typeOfForm]="typeOfForm" > </app-form>
+<app-form *ngIf="!contentOfForm?.weatherCity"
+  [typeOfForm]="TYPE_OF_FORM.CITY"
+  (submittedResults)="onSubmitContentOfForm($event)">
+</app-form>
+
+<app-display *ngIf="contentOfForm?.weatherCity"
+  [typeOfForm]="TYPE_OF_FORM.CITY"
+  [contentOfForm]="contentOfForm"
+  (newFormDisplay)="onNewFormDisplay($event)">
+</app-display>
+
+
+
 
 

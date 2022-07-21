@@ -10,10 +10,9 @@
         <div class="collapse navbar-collapse" id="navbar-Content">
             <!-- Routing to other Components -->
             <ul class="navbar-nav mr-auto">
-                <li class="nav-item"><a routerLink="City" class="nav-link"> City </a></li>
-                <li class="nav-item"><a routerLink="Coord" class="nav-link"> Coordinates </a></li>
-                <li class="nav-item"><a routerLink="Geolocation" class="nav-link"> Geolocation </a></li>
-
+                <li class="nav-item"><a routerLink="city" class="nav-link"> City </a></li>
+                <li class="nav-item"><a routerLink="coord" class="nav-link"> Coordinates </a></li>
+                <li class="nav-item"><a routerLink="geolocation" class="nav-link"> Geolocation </a></li>
                 <div ngbDropdown>
                   <button type="button" class="btn btn-light" id="dropdownBasic1" ngbDropdownToggle >Favorites Cities</button>
                   <div ngbDropdownMenu aria-labelledby="dropdownBasic1" >
@@ -26,15 +25,6 @@
     </div>
 </nav>
 
-<router-outlet *ngIf="headerResearch"></router-outlet>
 
-<app-display *ngIf="!headerResearch"
-             [typeOfForm]="typeOfForm"
-             [displayResearchFromForm]="headerResearch"
-             [cityNameFromForm]="cityPicked!"
-             [unitFromForm]="defaultUnit"
-             [langFromForm]="defaultLang"
-             (newResearchEvent)="onNewResearch($event)">
-</app-display>
 
 

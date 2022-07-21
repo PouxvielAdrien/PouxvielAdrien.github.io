@@ -19,6 +19,7 @@ import { GeolocationComponent } from './geolocation/geolocation.component';
 import {FavoritesCitiesService} from "@core/services/favorites-cities.service";
 import { FormComponent } from './form/form.component';
 import { DisplayComponent } from './display/display.component';
+import { FavoritesCitiesComponent } from './favorites-cities/favorites-cities.component';
 
 
 @NgModule({
@@ -31,6 +32,7 @@ import { DisplayComponent } from './display/display.component';
     GeolocationComponent,
     FormComponent,
     DisplayComponent,
+    FavoritesCitiesComponent,
 
   ],
   imports: [

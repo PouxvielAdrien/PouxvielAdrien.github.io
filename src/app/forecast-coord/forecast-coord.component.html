@@ -1,1 +1,10 @@
-<app-form [typeOfForm]="typeOfForm" > </app-form>
+<app-form *ngIf="!contentOfForm?.weatherLat && !contentOfForm?.weatherLon"
+  [typeOfForm]="TYPE_OF_FORM.COORD"
+  (submittedResults)="onSubmitContentOfForm($event)">
+</app-form>
+
+<app-display *ngIf="contentOfForm?.weatherLat && contentOfForm?.weatherLon"
+             [typeOfForm]="TYPE_OF_FORM.COORD"
+             [contentOfForm]="contentOfForm"
+             (newFormDisplay)="onNewFormDisplay($event)">
+</app-display>

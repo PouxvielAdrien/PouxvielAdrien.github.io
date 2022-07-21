@@ -1,13 +1,8 @@
-import {Component, OnDestroy, OnInit, Input} from '@angular/core';
-import { WeatherService } from '../_core/services/weather.service'
-import { FormGroup, FormControl, Validators } from '@angular/forms';
-
-import {HttpClient, HttpParams} from '@angular/common/http';
-import {WeatherUnit} from "@core/models";
-import {finalize, Subscription} from "rxjs";
-import {Router, ActivatedRoute} from "@angular/router";
-import {Weather} from "@core/models";
-import {FavoritesCitiesService} from "@core/services/favorites-cities.service";
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {ContentOfForm, TYPE_OF_FORM, WeatherUnit} from "@core/models";
+import {Subscription} from "rxjs";
+import {ActivatedRoute} from "@angular/router";
 
 
 @Component({
@@ -17,70 +12,77 @@ import {FavoritesCitiesService} from "@core/services/favorites-cities.service";
 })
 export class FormComponent implements OnInit, OnDestroy {
 
-  @Input() typeOfForm = '';
-
-  weatherForm: FormGroup|null = null;
+  @Input() typeOfForm: TYPE_OF_FORM = TYPE_OF_FORM.CITY;
+  @Output() submittedResults = new EventEmitter<ContentOfForm>();
   formResearch = true;
+  queryParamsSubscription: Subscription | null = null;
   sessionCityName: string = "";
   sessionLat: number | null =null;
   sessionLon: number | null =null;
+  weatherForm: FormGroup|null = null;
 
-  private queryParamsSubscription: Subscription | null = null;
+
+
+  readonly TYPE_OF_FORM = TYPE_OF_FORM
 
   constructor(private route:ActivatedRoute) {
   }
 
   ngOnInit(): void {
-    if(this.typeOfForm =='city') {
-      this.weatherForm = new FormGroup({
-        weatherCity: new FormControl("", [Validators.required]),
-        weatherUnit: new FormControl('metric'),
-        weatherLang: new FormControl('en')
-      });
-      this.loadData();
-      this.queryParamsSubscription = this.route.queryParamMap
-        .subscribe(params => {
-          const city = params.get('city');
-          if (city){
-            this.weatherForm!.setValue({weatherCity: city, weatherUnit: "metric", weatherLang: "en" })
-          }
-          else{
-            this.weatherForm!.setValue({weatherCity: this.sessionCityName, weatherUnit: "metric", weatherLang: "en" })
-          }
+    switch(this.typeOfForm) {
+      case TYPE_OF_FORM.CITY: {
+        this.weatherForm = new FormGroup({
+          weatherCity: new FormControl("", [Validators.required]),
+          weatherUnit: new FormControl('metric'),
+          weatherLang: new FormControl('en')
         });
-    }
+        this.loadData();
+        this.queryParamsSubscription = this.route.queryParamMap
+          .subscribe(params => {
+            const city = params.get('city');
+            const lang = params.get('lang');
+            const unit = params.get('unit');
+            if (city && unit && lang){
+              this.weatherForm!.setValue({weatherCity: city, weatherUnit: unit, weatherLang: lang })
+            }
+            else{
+              this.weatherForm!.setValue({weatherCity: this.sessionCityName, weatherUnit: "metric", weatherLang: "en" })
+            }
+          });
+        break;
+      }
 
-    if (this.typeOfForm == 'coord') {
-      this.weatherForm = new FormGroup({
-        weatherLat: new FormControl("", [Validators.required]),
-        weatherLon: new FormControl("", [Validators.required]),
-        weatherUnit: new FormControl('metric'),
-        weatherLang: new FormControl('en')
-      });
-      this.loadData();
-      this.queryParamsSubscription = this.route.queryParamMap
-        .subscribe(params => {
-          const lat = params.get('lat');
-          const lon = params.get('lon');
-          if (lat && lon){
-            this.weatherForm!.setValue({weatherLat: lat, weatherLon: lon, weatherUnit: "metric", weatherLang: "en" })
-          }
-          else{
-            this.weatherForm!.setValue({weatherLat: this.sessionLat, weatherLon: this.sessionLon, weatherUnit: "metric", weatherLang: "en" })
-          }
+      case TYPE_OF_FORM.COORD: {
+        this.weatherForm = new FormGroup({
+          weatherLat: new FormControl("", [Validators.required]),
+          weatherLon: new FormControl("", [Validators.required]),
+          weatherUnit: new FormControl('metric'),
+          weatherLang: new FormControl('en')
         });
+        this.loadData();
+        this.queryParamsSubscription = this.route.queryParamMap
+          .subscribe(params => {
+            const lat = params.get('lat');
+            const lon = params.get('lon');
+            if (lat && lon){
+              this.weatherForm!.setValue({weatherLat: lat, weatherLon: lon, weatherUnit: "metric", weatherLang: "en" })
+            }
+            else{
+              this.weatherForm!.setValue({weatherLat: this.sessionLat, weatherLon: this.sessionLon, weatherUnit: "metric", weatherLang: "en" })
+            }
+          });
+        break;
+      }
+
+      case TYPE_OF_FORM.LOCATION: {
+        this.weatherForm = new FormGroup({
+          weatherUnit: new FormControl('metric'),
+          weatherLang: new FormControl('en')
+        });
+        break;
+      }
     }
-
-    if (this.typeOfForm == 'location') {
-      this.weatherForm = new FormGroup({
-        weatherUnit: new FormControl('metric'),
-        weatherLang: new FormControl('en')
-      });
-    }
-
-
   }
-
 
   ngOnDestroy() {
     this.queryParamsSubscription?.unsubscribe();
@@ -107,38 +109,44 @@ export class FormComponent implements OnInit, OnDestroy {
   }
 
   onShowWeather() {
-    if(this.typeOfForm =='city') {
-      localStorage.setItem('cityLocalyStored', JSON.stringify(this.cityFormValue));
+    switch(this.typeOfForm) {
+      case TYPE_OF_FORM.CITY: {
+        localStorage.setItem('cityLocalyStored', JSON.stringify(this.cityFormValue));
+        break;
       }
 
-    if(this.typeOfForm =='coord') {
-      localStorage.setItem('SessionLat', JSON.stringify(this.latFormValue));
-      localStorage.setItem('SessionLon', JSON.stringify(this.lonFormValue));;
+      case TYPE_OF_FORM.COORD: {
+        localStorage.setItem('SessionLat', JSON.stringify(this.latFormValue));
+        localStorage.setItem('SessionLon', JSON.stringify(this.lonFormValue));;
+        break;
       }
-
-    this.formResearch = false
+    }
+    this.submittedResults.emit(this.weatherForm?.value);
   }
 
   loadData() {
-    if(this.typeOfForm =='city') {
-      let cityLocalyStored: string | null;
-      cityLocalyStored = localStorage.getItem('cityLocalyStored');
-      if (cityLocalyStored) {
-        this.sessionCityName = JSON.parse(cityLocalyStored);
+    switch(this.typeOfForm) {
+      case TYPE_OF_FORM.CITY: {
+        let cityLocalyStored: string | null;
+        cityLocalyStored = localStorage.getItem('cityLocalyStored');
+        if (cityLocalyStored) {
+          this.sessionCityName = JSON.parse(cityLocalyStored);
+        }
+        break;
       }
-    }
 
-    if(this.typeOfForm =='coord') {
-      let latLocalyStored: string | null;
-      let lonLocalyStored: string | null;
-
-      latLocalyStored = localStorage.getItem('SessionLat');
-      lonLocalyStored = localStorage.getItem('SessionLon');
-      if (latLocalyStored){
-        this.sessionLat = JSON.parse(latLocalyStored);
-      }
-      if (lonLocalyStored){
-        this.sessionLon = JSON.parse(lonLocalyStored);
+      case TYPE_OF_FORM.COORD: {
+        let latLocalyStored: string | null;
+        let lonLocalyStored: string | null;
+        latLocalyStored = localStorage.getItem('SessionLat');
+        lonLocalyStored = localStorage.getItem('SessionLon');
+        if (latLocalyStored){
+          this.sessionLat = JSON.parse(latLocalyStored);
+        }
+        if (lonLocalyStored){
+          this.sessionLon = JSON.parse(lonLocalyStored);
+        }
+        break;
       }
     }
   }
@@ -146,5 +154,6 @@ export class FormComponent implements OnInit, OnDestroy {
   onNewResearch(stateOfResearch: boolean){
     this.formResearch = stateOfResearch
   }
+
 
 }

@@ -1,23 +1,23 @@
 <div class="container">
   <div class="form-city" >
-    <div class="row justify-content-center" *ngIf="formResearch">
+    <div class="row justify-content-center">
       <div class="col-10 col-lg-8">
         <!-- Form to get data from the user -->
         <!-- Data Collected : City Name -->
         <div class="card text-center m-3">
           <form [formGroup]="weatherForm!" (ngSubmit)="onShowWeather()" class="needs-validation m-1">
-            <div class="row justify-content-center"  *ngIf="typeOfForm === 'city' || typeOfForm === 'coord' ">
+            <div class="row justify-content-center"  *ngIf="typeOfForm === TYPE_OF_FORM.CITY  || typeOfForm === TYPE_OF_FORM.COORD ">
               <div class="col-10">
                 <div class="input-group input-group-lg p-3">
                   <span class="input-group-text" id="inputGroup-sizing-default">
-                    <p *ngIf="typeOfForm === 'city'" class="mb-0">City Name</p>
-                    <p *ngIf="typeOfForm === 'coord'" class="mb-0">Coord</p>
+                    <p *ngIf="typeOfForm === TYPE_OF_FORM.CITY" class="mb-0">City Name</p>
+                    <p *ngIf="typeOfForm === TYPE_OF_FORM.COORD" class="mb-0">Coord</p>
                   </span>
-                  <input id="city" name="city" class="form-control" type="text" formControlName="weatherCity" *ngIf="typeOfForm === 'city'"/>
+                  <input id="city" name="city" class="form-control" type="text" formControlName="weatherCity" *ngIf="typeOfForm === TYPE_OF_FORM.CITY"/>
                   <input id="lat" name="lat" class="form-control" type="text" placeholder="Latitude"
-                      formControlName="weatherLat" *ngIf="typeOfForm === 'coord'"/>
+                      formControlName="weatherLat" *ngIf="typeOfForm === TYPE_OF_FORM.COORD"/>
                   <input id="lon" name="lon" class="form-control" type="text" placeholder="Longitude"
-                      formControlName="weatherLon" *ngIf="typeOfForm === 'coord'"/>
+                      formControlName="weatherLon" *ngIf="typeOfForm === TYPE_OF_FORM.COORD"/>
                 </div>
               </div>
             </div>
@@ -68,14 +68,5 @@
   </div>
 </div>
 
-<app-display *ngIf="!formResearch"
-  [typeOfForm]="typeOfForm"
-  [cityNameFromForm]="cityFormValue"
-  [latFromForm]="latFormValue"
-  [lonFromForm]="lonFormValue"
-  [unitFromForm]="unitFormValue"
-  [langFromForm]="langFormValue"
-  [displayResearchFromForm]="formResearch"
-  (newResearchEvent)="onNewResearch($event)">
-</app-display>
+
 
