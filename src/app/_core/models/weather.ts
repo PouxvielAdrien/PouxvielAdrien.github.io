@@ -1,5 +1,4 @@
 import {WeatherDto} from "@core/models/dtos";
-import {WeatherUnit} from "@core/models/global";
 
 export class Weather {
   tempMin:number | null = null;

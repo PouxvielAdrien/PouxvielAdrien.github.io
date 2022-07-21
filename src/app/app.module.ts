@@ -2,6 +2,8 @@
 
 /* Import the application components and modules */
 import { NgModule } from '@angular/core';
+import{NgbDropdownModule} from "@ng-bootstrap/ng-bootstrap";
+import{NgbModule} from "@ng-bootstrap/ng-bootstrap";
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
@@ -14,6 +16,10 @@ import { CurrentCityComponent } from './current-city/current-city.component';
 import { ForecastCoordComponent } from './forecast-coord/forecast-coord.component';
 import { NotfoundComponent } from './notfound/notfound.component';
 import { GeolocationComponent } from './geolocation/geolocation.component';
+import {FavoritesCitiesService} from "@core/services/favorites-cities.service";
+import { FormComponent } from './form/form.component';
+import { DisplayComponent } from './display/display.component';
+import { FavoritesCitiesComponent } from './favorites-cities/favorites-cities.component';
 
 
 @NgModule({
@@ -23,7 +29,11 @@ import { GeolocationComponent } from './geolocation/geolocation.component';
     CurrentCityComponent,
     ForecastCoordComponent,
     NotfoundComponent,
-    GeolocationComponent
+    GeolocationComponent,
+    FormComponent,
+    DisplayComponent,
+    FavoritesCitiesComponent,
+
   ],
   imports: [
     BrowserModule,
@@ -31,9 +41,11 @@ import { GeolocationComponent } from './geolocation/geolocation.component';
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
+    NgbModule
   ],
   providers: [
     WeatherService,
+    FavoritesCitiesService
   ],
   bootstrap: [AppComponent]
 })
