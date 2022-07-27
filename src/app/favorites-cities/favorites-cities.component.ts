@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import {Subscription} from "rxjs";
 import {ActivatedRoute} from "@angular/router";
 import {TYPE_OF_FORM} from "@core/models";
@@ -8,7 +8,7 @@ import {TYPE_OF_FORM} from "@core/models";
   templateUrl: './favorites-cities.component.html',
   styleUrls: ['./favorites-cities.component.css']
 })
-export class FavoritesCitiesComponent implements OnInit {
+export class FavoritesCitiesComponent implements OnInit, OnDestroy {
 
   favCityPicked:string="";
   queryParamsSubscription: Subscription | null = null;

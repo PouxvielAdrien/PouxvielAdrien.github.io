@@ -88,8 +88,13 @@ export class FormComponent implements OnInit, OnDestroy {
     this.queryParamsSubscription?.unsubscribe();
   }
 
-  get cityFormValue():string{
+  getFormControlValue(formControlName:string){
     return this.weatherForm!.get("weatherCity")?.value
+  }
+
+  get cityFormValue():string{
+    return  this.getFormControlValue('weatherCity')
+
   }
 
   get latFormValue():string{
@@ -110,14 +115,14 @@ export class FormComponent implements OnInit, OnDestroy {
 
   onShowWeather() {
     switch(this.typeOfForm) {
-      case TYPE_OF_FORM.CITY: {
-        localStorage.setItem('cityLocalyStored', JSON.stringify(this.cityFormValue));
-        break;
-      }
-
       case TYPE_OF_FORM.COORD: {
         localStorage.setItem('SessionLat', JSON.stringify(this.latFormValue));
         localStorage.setItem('SessionLon', JSON.stringify(this.lonFormValue));;
+        break;
+      }
+      default:
+      case TYPE_OF_FORM.CITY: {
+        localStorage.setItem('cityLocalyStored', JSON.stringify(this.cityFormValue));
         break;
       }
     }
@@ -126,15 +131,6 @@ export class FormComponent implements OnInit, OnDestroy {
 
   loadData() {
     switch(this.typeOfForm) {
-      case TYPE_OF_FORM.CITY: {
-        let cityLocalyStored: string | null;
-        cityLocalyStored = localStorage.getItem('cityLocalyStored');
-        if (cityLocalyStored) {
-          this.sessionCityName = JSON.parse(cityLocalyStored);
-        }
-        break;
-      }
-
       case TYPE_OF_FORM.COORD: {
         let latLocalyStored: string | null;
         let lonLocalyStored: string | null;
@@ -148,6 +144,17 @@ export class FormComponent implements OnInit, OnDestroy {
         }
         break;
       }
+
+      default:
+      case TYPE_OF_FORM.CITY: {
+        let cityLocalyStored: string | null;
+        cityLocalyStored = localStorage.getItem('cityLocalyStored');
+        if (cityLocalyStored) {
+          this.sessionCityName = JSON.parse(cityLocalyStored);
+        }
+        break;
+      }
+
     }
   }
 

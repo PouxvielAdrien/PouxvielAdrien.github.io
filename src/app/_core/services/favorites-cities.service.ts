@@ -14,7 +14,7 @@ export class FavoritesCitiesService {
               private route:ActivatedRoute,) {}
 
   onSaveCities(listOfFavoritesCities:string[], cityToAdd:string) {
-    if((!listOfFavoritesCities.includes(cityToAdd)) && listOfFavoritesCities.length<=MAX_FAVORITE_CITY){
+    if(this.isCityAddedAsFavorite(listOfFavoritesCities,cityToAdd) && this.canAddCity(listOfFavoritesCities)){
       listOfFavoritesCities.push(cityToAdd),
         this.starIcon=true;
 
@@ -29,6 +29,25 @@ export class FavoritesCitiesService {
     this.favoritesCities=listOfFavoritesCities;
     localStorage.setItem('sessionFavCity', JSON.stringify(this.favoritesCities));
   }
+
+  isCityAddedAsFavorite(listOfFavoritesCities:string[], cityToAdd:string){
+    if(!listOfFavoritesCities.includes(cityToAdd)){
+      return true
+    }
+    else{
+      return false
+    }
+  }
+
+  canAddCity(listOfFavoritesCities:string[]){
+    if(listOfFavoritesCities.length<=MAX_FAVORITE_CITY){
+      return true
+    }
+    else{
+      return false
+    }
+  }
+
 
   onCheckIfFavCityForColorOfStar(listOfFavoritesCities:string[], cityToAdd:string) {
     if(listOfFavoritesCities.includes(cityToAdd)){

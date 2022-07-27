@@ -11,13 +11,14 @@ import {FavoritesCitiesComponent} from "./favorites-cities/favorites-cities.comp
 
 /* Routes definition and export */
 const WeatherRouting: Routes = [
-  { path: '', pathMatch: 'full', redirectTo: 'City' },
+
+  { path: '', pathMatch: 'full', redirectTo: 'city' },
   { path: 'geolocation', component: GeolocationComponent },
   { path: 'city', component: CurrentCityComponent },
   { path: 'coord', component: ForecastCoordComponent },
   { path: 'favorites', component: FavoritesCitiesComponent },
   { path: '404', component: NotfoundComponent },
-  { path: '**', redirectTo: '/404' }
+  { path: '**', redirectTo: 'city' },
 ];
 
 @NgModule({

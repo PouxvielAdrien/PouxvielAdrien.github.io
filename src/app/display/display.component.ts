@@ -22,6 +22,7 @@ export class DisplayComponent implements OnInit, OnDestroy {
   locationDenied = true;
   queryParamsSubscription: Subscription | null = null;
   sessionFavCityName: string[] =[];
+  unitSymbol:string="";
   weathers:Weather[] | null = null;
   readonly TYPE_OF_FORM = TYPE_OF_FORM;
 
@@ -34,36 +35,6 @@ export class DisplayComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     switch(this.typeOfForm) {
-      case TYPE_OF_FORM.CITY: {
-        this.isSearching = true;
-        localStorage.setItem('cityLocalyStored', JSON.stringify(this.contentOfForm?.weatherCity));
-          this.ws.getCurrentWeatherWithCityApi(
-            this.contentOfForm?.weatherCity!,
-            this.contentOfForm?.weatherUnit!,
-            this.contentOfForm?.weatherLang!)
-            .pipe(
-              finalize(()=> this.isSearching = false)
-            )
-            .subscribe(data => {
-              this.currentWeather = data,
-              this.fc.onCheckIfFavCityForColorOfStar(this.fc.favoritesCities, this.currentWeather.cityName!);
-            });
-
-          this.ws.getForecastWeatherWithCityApi(
-            this.contentOfForm?.weatherCity!,
-            this.contentOfForm?.weatherUnit!,
-            this.contentOfForm?.weatherLang!)
-            .pipe(
-              finalize(()=> this.isSearching = false)
-            )
-            .subscribe(data => {
-              this.weathers = data.weathers;
-            });
-
-          this.changingQueryParams();
-        break;
-      }
-
       case TYPE_OF_FORM.COORD: {
         this.isSearching = true;
         localStorage.setItem('SessionLat', JSON.stringify(this.contentOfForm?.weatherLat!));
@@ -152,6 +123,38 @@ export class DisplayComponent implements OnInit, OnDestroy {
           });
         break;
       }
+
+      default:
+      case TYPE_OF_FORM.CITY: {
+        this.isSearching = true;
+        localStorage.setItem('cityLocalyStored', JSON.stringify(this.contentOfForm?.weatherCity));
+        this.ws.getCurrentWeatherWithCityApi(
+          this.contentOfForm?.weatherCity!,
+          this.contentOfForm?.weatherUnit!,
+          this.contentOfForm?.weatherLang!)
+          .pipe(
+            finalize(()=> this.isSearching = false)
+          )
+          .subscribe(data => {
+            this.currentWeather = data,
+              this.fc.onCheckIfFavCityForColorOfStar(this.fc.favoritesCities, this.currentWeather.cityName!),
+              this.displayUnitSymbol(this.currentWeather.unit!);
+          });
+
+        this.ws.getForecastWeatherWithCityApi(
+          this.contentOfForm?.weatherCity!,
+          this.contentOfForm?.weatherUnit!,
+          this.contentOfForm?.weatherLang!)
+          .pipe(
+            finalize(()=> this.isSearching = false)
+          )
+          .subscribe(data => {
+            this.weathers = data.weathers;
+          });
+
+        this.changingQueryParams();
+        break;
+      }
     }
   }
 
@@ -188,17 +191,6 @@ export class DisplayComponent implements OnInit, OnDestroy {
 
   changingQueryParams() {
     switch(this.typeOfForm) {
-      case TYPE_OF_FORM.CITY: {
-        this.router.navigate(
-          [],
-          {queryParams:{
-              city: this.contentOfForm?.weatherCity,
-              unit: this.contentOfForm?.weatherUnit,
-              lang: this.contentOfForm?.weatherLang},
-            relativeTo: this.route});
-        break;
-      }
-
       case TYPE_OF_FORM.COORD: {
         this.router.navigate(
           [],
@@ -219,6 +211,26 @@ export class DisplayComponent implements OnInit, OnDestroy {
             relativeTo: this.route});
         break;
       }
+      default:
+      case TYPE_OF_FORM.CITY: {
+        this.router.navigate(
+          [],
+          {queryParams:{
+              city: this.contentOfForm?.weatherCity,
+              unit: this.contentOfForm?.weatherUnit,
+              lang: this.contentOfForm?.weatherLang},
+            relativeTo: this.route});
+        break;
+      }
+    }
+  }
+
+  displayUnitSymbol(unit:string){
+    if(unit == 'metric'){
+      this.unitSymbol="°C";
+    }
+   else{
+      this.unitSymbol="°F";
     }
   }
 }

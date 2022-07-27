@@ -2,7 +2,7 @@
 
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {FavoritesCitiesService} from "@core/services/favorites-cities.service";
-import {TYPE_OF_FORM, WeatherUnit} from "@core/models";
+import {MIN_FAVORITE_CITY, TYPE_OF_FORM, WeatherUnit} from "@core/models";
 import {ActivatedRoute, Router} from "@angular/router";
 
 @Component({
@@ -47,6 +47,15 @@ export class HeaderComponent implements OnInit {
         this.sessionFavCityName = JSON.parse(fc);
       });
       this.fc.favoritesCities = this.sessionFavCityName;
+    }
+  }
+
+  canDisplayFavoriteButton(listOfFavoritesCities:string[]){
+    if(listOfFavoritesCities.length>=MIN_FAVORITE_CITY){
+      return true
+    }
+   else {
+      return false
     }
   }
 }
