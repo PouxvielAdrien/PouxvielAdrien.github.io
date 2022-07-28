@@ -25,15 +25,15 @@ export class Weather {
     this.lang=lang;
   }
 
-  getDisplayWeatherUnit():'°C' | '°F'{
+  getDisplayWeatherUnit():'°C' | '°F' | undefined {
     switch (this.unit) {
       case 'imperial': {
         return '°F'
       }
-      default:
       case 'metric': {
         return '°C'
       }
     }
+    return
   }
 }

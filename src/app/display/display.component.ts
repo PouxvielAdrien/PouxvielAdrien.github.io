@@ -48,8 +48,7 @@ export class DisplayComponent implements OnInit, OnDestroy {
               finalize(()=> this.isSearching = false)
             )
             .subscribe(data => {
-              this.currentWeather = data,
-                this.fc.onCheckIfFavCityForColorOfStar(this.fc.favoritesCities, this.currentWeather.cityName!);
+              this.currentWeather = data;
             });
 
           this.ws.getForecastWithCoordApi(
@@ -80,9 +79,7 @@ export class DisplayComponent implements OnInit, OnDestroy {
                   finalize(()=> this.isSearching = false)
                 )
                 .subscribe(data => {
-                  this.currentWeather = data,
-                    this.fc.onCheckIfFavCityForColorOfStar(this.fc.favoritesCities, this.currentWeather.cityName!);
-
+                  this.currentWeather = data;
                 });
             },
             (error) => {
@@ -107,8 +104,7 @@ export class DisplayComponent implements OnInit, OnDestroy {
             finalize(()=> this.isSearching = false)
           )
           .subscribe(data => {
-            this.currentWeather = data,
-              this.fc.onCheckIfFavCityForColorOfStar(this.fc.favoritesCities, this.currentWeather.cityName!);
+            this.currentWeather = data;
           });
 
         this.ws.getForecastWeatherWithCityApi(
@@ -136,8 +132,7 @@ export class DisplayComponent implements OnInit, OnDestroy {
             finalize(()=> this.isSearching = false)
           )
           .subscribe(data => {
-            this.currentWeather = data,
-              this.fc.onCheckIfFavCityForColorOfStar(this.fc.favoritesCities, this.currentWeather.cityName!);
+            this.currentWeather = data;
           });
 
         this.ws.getForecastWeatherWithCityApi(
@@ -162,8 +157,7 @@ export class DisplayComponent implements OnInit, OnDestroy {
   }
 
   onSaveCities(){
-    this.fc.onSaveCities(this.fc.favoritesCities, this.currentWeather!.cityName!)
-    this.fc.onCheckIfFavCityForColorOfStar(this.fc.favoritesCities, this.currentWeather!.cityName!)
+    this.fc.onSaveCities(this.currentWeather!.cityName!)
   }
 
   onNewResearch(){

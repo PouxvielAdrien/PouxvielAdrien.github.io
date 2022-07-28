@@ -89,7 +89,7 @@ export class FormComponent implements OnInit, OnDestroy {
   }
 
   getFormControlValue(formControlName:string){
-    return this.weatherForm!.get("weatherCity")?.value
+    return this.weatherForm!.get(formControlName)?.value
   }
 
   get cityFormValue():string{
@@ -98,19 +98,19 @@ export class FormComponent implements OnInit, OnDestroy {
   }
 
   get latFormValue():string{
-    return this.weatherForm!.get("weatherLat")?.value
+    return  this.getFormControlValue('weatherLat')
   }
 
   get lonFormValue():string{
-    return this.weatherForm!.get("weatherLon")?.value
+    return  this.getFormControlValue('weatherLon')
   }
 
   get unitFormValue():WeatherUnit{
-    return this.weatherForm!.get("weatherUnit")?.value
+    return  this.getFormControlValue('weatherUnit')
   }
 
   get langFormValue():string{
-    return this.weatherForm!.get("weatherLang")?.value
+    return  this.getFormControlValue('weatherLang')
   }
 
   onShowWeather() {

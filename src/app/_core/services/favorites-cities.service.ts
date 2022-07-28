@@ -13,25 +13,21 @@ export class FavoritesCitiesService {
   constructor(private router:Router,
               private route:ActivatedRoute,) {}
 
-  onSaveCities(listOfFavoritesCities:string[], cityToAdd:string) {
-    if(this.isCityAddedAsFavorite(listOfFavoritesCities,cityToAdd) && this.canAddCity(listOfFavoritesCities)){
-      listOfFavoritesCities.push(cityToAdd),
-        this.starIcon=true;
-
+  onSaveCities(cityToAdd:string) {
+    if(this.canAddCity(cityToAdd)){
+      this.favoritesCities.push(cityToAdd);
     }
     else{
-      const index: number = listOfFavoritesCities.indexOf(cityToAdd);
+      const index: number = this.favoritesCities.indexOf(cityToAdd);
       if (index !== -1) {
-        listOfFavoritesCities.splice(index, 1),
-          this.starIcon=false;
+        this.favoritesCities.splice(index, 1);
       }
     }
-    this.favoritesCities=listOfFavoritesCities;
     localStorage.setItem('sessionFavCity', JSON.stringify(this.favoritesCities));
   }
 
-  isCityAddedAsFavorite(listOfFavoritesCities:string[], cityToAdd:string){
-    if(!listOfFavoritesCities.includes(cityToAdd)){
+  canAddCity(cityToAdd:string){
+    if(!this.favoritesCities.includes(cityToAdd) && this.favoritesCities.length<=MAX_FAVORITE_CITY){
       return true
     }
     else{
@@ -39,23 +35,8 @@ export class FavoritesCitiesService {
     }
   }
 
-  canAddCity(listOfFavoritesCities:string[]){
-    if(listOfFavoritesCities.length<=MAX_FAVORITE_CITY){
-      return true
-    }
-    else{
-      return false
-    }
-  }
-
-
-  onCheckIfFavCityForColorOfStar(listOfFavoritesCities:string[], cityToAdd:string) {
-    if(listOfFavoritesCities.includes(cityToAdd)){
-      this.starIcon=true;
-    }
-    else{
-      this.starIcon=false;
-    }
+  isResultAddedInFavorite(cityToAdd:string) {
+    return this.favoritesCities.includes(cityToAdd);
   }
 
 }
