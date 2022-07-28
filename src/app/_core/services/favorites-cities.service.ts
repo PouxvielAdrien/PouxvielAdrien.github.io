@@ -8,10 +8,8 @@ import {MAX_FAVORITE_CITY} from "@core/models";
 export class FavoritesCitiesService {
 
   favoritesCities: string[] =[];
-  starIcon = false;
 
-  constructor(private router:Router,
-              private route:ActivatedRoute,) {}
+  constructor() {}
 
   onSaveCities(cityToAdd:string) {
     if(this.canAddCity(cityToAdd)){
@@ -27,7 +25,7 @@ export class FavoritesCitiesService {
   }
 
   canAddCity(cityToAdd:string){
-    if(!this.favoritesCities.includes(cityToAdd) && this.favoritesCities.length<=MAX_FAVORITE_CITY){
+    if(!this.isCityAddedInFavorite(cityToAdd) && this.favoritesCities.length<=MAX_FAVORITE_CITY){
       return true
     }
     else{
@@ -35,7 +33,7 @@ export class FavoritesCitiesService {
     }
   }
 
-  isResultAddedInFavorite(cityToAdd:string) {
+  isCityAddedInFavorite(cityToAdd:string) {
     return this.favoritesCities.includes(cityToAdd);
   }
 

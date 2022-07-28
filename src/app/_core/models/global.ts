@@ -1,4 +1,4 @@
-export type WeatherUnit = 'metric' | 'imperial' | ''
+export type WeatherUnit = 'metric' | 'imperial'
 
 
 export enum TYPE_OF_FORM {

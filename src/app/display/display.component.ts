@@ -22,7 +22,6 @@ export class DisplayComponent implements OnInit, OnDestroy {
   locationDenied = true;
   queryParamsSubscription: Subscription | null = null;
   sessionFavCityName: string[] =[];
-  unitSymbol:string="";
   weathers:Weather[] | null = null;
   readonly TYPE_OF_FORM = TYPE_OF_FORM;
 
@@ -31,7 +30,7 @@ export class DisplayComponent implements OnInit, OnDestroy {
               private http: HttpClient,
               private router:Router,
               private route:ActivatedRoute,
-              protected fc: FavoritesCitiesService) {}
+              private fc: FavoritesCitiesService) {}
 
   ngOnInit(): void {
     switch(this.typeOfForm) {
@@ -198,6 +197,10 @@ export class DisplayComponent implements OnInit, OnDestroy {
         break;
       }
     }
+  }
+
+  isCityAddedInFavorite() {
+    return this.fc.isCityAddedInFavorite(this.currentWeather?.cityName!);
   }
 
 
