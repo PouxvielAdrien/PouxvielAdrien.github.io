@@ -1,5 +1,6 @@
 export type WeatherUnit = 'metric' | 'imperial' | ''
 
+
 export enum TYPE_OF_FORM {
   CITY,
   COORD,

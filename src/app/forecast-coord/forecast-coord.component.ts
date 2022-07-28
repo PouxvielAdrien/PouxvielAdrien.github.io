@@ -14,7 +14,7 @@ export class ForecastCoordComponent {
     this.contentOfForm = content;
   }
 
-  onNewFormDisplay(content:ContentOfForm){
-    this.contentOfForm = content;
+  onNewFormDisplay(){
+    this.contentOfForm = null;
   }
 }

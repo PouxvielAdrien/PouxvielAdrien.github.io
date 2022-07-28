@@ -16,7 +16,7 @@ export class DisplayComponent implements OnInit, OnDestroy {
   @Input() contentOfForm:ContentOfForm |null=null;
   @Input() favCityPicked:string = "";
   @Input() typeOfForm: TYPE_OF_FORM | null = null;
-  @Output() newFormDisplay = new EventEmitter<ContentOfForm>();
+  @Output() clickedNew = new EventEmitter<void>();
   currentWeather: Weather | null = null;
   isSearching = false;
   locationDenied = true;
@@ -137,8 +137,7 @@ export class DisplayComponent implements OnInit, OnDestroy {
           )
           .subscribe(data => {
             this.currentWeather = data,
-              this.fc.onCheckIfFavCityForColorOfStar(this.fc.favoritesCities, this.currentWeather.cityName!),
-              this.displayUnitSymbol(this.currentWeather.unit!);
+              this.fc.onCheckIfFavCityForColorOfStar(this.fc.favoritesCities, this.currentWeather.cityName!);
           });
 
         this.ws.getForecastWeatherWithCityApi(
@@ -168,25 +167,7 @@ export class DisplayComponent implements OnInit, OnDestroy {
   }
 
   onNewResearch(){
-    switch(this.typeOfForm) {
-      case TYPE_OF_FORM.CITY: {
-        this.contentOfForm!.weatherCity = "";
-        break;
-      }
-      case TYPE_OF_FORM.COORD: {
-        this.contentOfForm!.weatherLat = "";
-        this.contentOfForm!.weatherLon = "";
-        break;
-      }
-
-      case TYPE_OF_FORM.LOCATION: {
-        this.contentOfForm!.weatherUnit = "";
-        this.contentOfForm!.weatherLang = "";
-        break;
-
-      }
-    }
-    this.newFormDisplay.emit(this.contentOfForm!)
+    this.clickedNew.emit()
   }
 
   changingQueryParams() {
@@ -225,12 +206,5 @@ export class DisplayComponent implements OnInit, OnDestroy {
     }
   }
 
-  displayUnitSymbol(unit:string){
-    if(unit == 'metric'){
-      this.unitSymbol="°C";
-    }
-   else{
-      this.unitSymbol="°F";
-    }
-  }
+
 }

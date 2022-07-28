@@ -14,8 +14,8 @@ export class CurrentCityComponent {
     console.log(content);
   }
 
-  onNewFormDisplay(content:ContentOfForm){
-    this.contentOfForm = content;
+  onNewFormDisplay(){
+    this.contentOfForm = null;
   }
 }
 

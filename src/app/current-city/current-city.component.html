@@ -6,7 +6,7 @@
 <app-display *ngIf="contentOfForm?.weatherCity"
   [typeOfForm]="TYPE_OF_FORM.CITY"
   [contentOfForm]="contentOfForm"
-  (newFormDisplay)="onNewFormDisplay($event)">
+  (clickedNew)="onNewFormDisplay()">
 </app-display>
 
 

@@ -33,7 +33,7 @@
 <!--    Todo in Bonus : Use Localized module to manage langages-->
     <h4 *ngIf="currentWeather.lang === 'en'">Current Weather</h4>
     <h4 *ngIf="currentWeather.lang === 'fr'">Temps Actuel</h4>
-    <h5 >{{currentWeather.tempCurrent  | number: '1.0-0' }}{{ unitSymbol }}</h5>
+    <h5 >{{currentWeather.tempCurrent  | number: '1.0-0' }}{{currentWeather.getDisplayWeatherUnit()}}</h5>
     <p class="card-text">{{currentWeather.description}}</p>
     <img alt="weather icon" src="http://openweathermap.org/img/wn/{{currentWeather.icon}}@2x.png" class="img-fluid">
   </div>

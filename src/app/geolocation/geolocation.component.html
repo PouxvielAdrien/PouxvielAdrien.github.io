@@ -6,5 +6,5 @@
 <app-display *ngIf="contentOfForm?.weatherUnit && contentOfForm?.weatherLang"
              [typeOfForm]="TYPE_OF_FORM.LOCATION"
              [contentOfForm]="contentOfForm"
-             (newFormDisplay)="onNewFormDisplay($event)">
+             (clickedNew)="onNewFormDisplay()">
 </app-display>

@@ -15,8 +15,8 @@ export class GeolocationComponent {
     console.log(content);
   }
 
-  onNewFormDisplay(content:ContentOfForm){
-    this.contentOfForm = content;
-    console.log("RETOUR",content)
+  onNewFormDisplay(){
+    this.contentOfForm = null;
+
   }
 }
