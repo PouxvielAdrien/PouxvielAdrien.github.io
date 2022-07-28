@@ -7,15 +7,18 @@ import { CurrentCityComponent } from './current-city/current-city.component';
 import { ForecastCoordComponent } from './forecast-coord/forecast-coord.component';
 import { NotfoundComponent } from './notfound/notfound.component';
 import { GeolocationComponent } from './geolocation/geolocation.component';
+import {FavoritesCitiesComponent} from "./favorites-cities/favorites-cities.component";
 
 /* Routes definition and export */
 const WeatherRouting: Routes = [
-  { path: '', pathMatch: 'full', redirectTo: 'City' },
-  { path: 'Geolocation', component: GeolocationComponent },
-  { path: 'City', component: CurrentCityComponent },
-  { path: 'Coord', component: ForecastCoordComponent },
+
+  { path: '', pathMatch: 'full', redirectTo: 'city' },
+  { path: 'geolocation', component: GeolocationComponent },
+  { path: 'city', component: CurrentCityComponent },
+  { path: 'coord', component: ForecastCoordComponent },
+  { path: 'favorites', component: FavoritesCitiesComponent },
   { path: '404', component: NotfoundComponent },
-  { path: '**', redirectTo: '/404' }
+  { path: '**', redirectTo: 'city' },
 ];
 
 @NgModule({

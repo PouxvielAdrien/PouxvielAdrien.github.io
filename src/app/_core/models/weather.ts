@@ -10,10 +10,10 @@ export class Weather {
   cityName:string|null = null;
   description: string | null = null;
   lang:string|null = null;
-  unit:string|null = null;
+  unit:WeatherUnit;
 
 
-  constructor(weatherDto:WeatherDto, defaultCityName:string = "Some Location", unit:string, lang:string) {
+  constructor(weatherDto:WeatherDto, defaultCityName:string = "Some Location", unit:WeatherUnit, lang:string) {
     this.tempMin = weatherDto.main.temp_min;
     this.tempMax = weatherDto.main.temp_max;
     this.tempCurrent = weatherDto.main.temp;
@@ -25,4 +25,15 @@ export class Weather {
     this.lang=lang;
   }
 
+  getDisplayWeatherUnit():'°C' | '°F' | undefined {
+    switch (this.unit) {
+      case 'imperial': {
+        return '°F'
+      }
+      case 'metric': {
+        return '°C'
+      }
+    }
+    return
+  }
 }
