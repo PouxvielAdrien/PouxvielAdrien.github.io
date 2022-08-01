@@ -14,9 +14,6 @@ export class HeaderComponent implements OnInit {
 
   @Output() formEvent = new EventEmitter<boolean>();
   cityPicked:string|null=null;
-  defaultLang="en";
-  defaultUnit:WeatherUnit="metric";
-  headerResearch = true;
   sessionFavCityName: string[] =[];
   readonly TYPE_OF_FORM= TYPE_OF_FORM;
 
