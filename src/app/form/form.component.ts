@@ -20,7 +20,7 @@ export class FormComponent implements OnInit, OnDestroy {
   sessionLat: number | null =null;
   sessionLon: number | null =null;
   weatherForm: FormGroup|null = null;
-
+  language:string|null = null;
 
 
   readonly TYPE_OF_FORM = TYPE_OF_FORM
@@ -29,12 +29,14 @@ export class FormComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.language = $localize `en`;
+    console.log(this.language)
     switch(this.typeOfForm) {
       case TYPE_OF_FORM.CITY: {
         this.weatherForm = new FormGroup({
           weatherCity: new FormControl("", [Validators.required]),
           weatherUnit: new FormControl('metric'),
-          weatherLang: new FormControl('en')
+          weatherLang: new FormControl(this.language)
         });
         this.loadData();
         this.queryParamsSubscription = this.route.queryParamMap
@@ -46,7 +48,7 @@ export class FormComponent implements OnInit, OnDestroy {
               this.weatherForm!.setValue({weatherCity: city, weatherUnit: unit, weatherLang: lang })
             }
             else{
-              this.weatherForm!.setValue({weatherCity: this.sessionCityName, weatherUnit: "metric", weatherLang: "en" })
+              this.weatherForm!.setValue({weatherCity: this.sessionCityName, weatherUnit: "metric", weatherLang: this.language})
             }
           });
         break;

@@ -1,7 +1,7 @@
 <nav class="navbar navbar-expand-md navbar-light bg-light bg-gradient">
     <div class="container ">
         <!-- NavBar Brand and Toggler Icon -->
-        <a class="navbar-brand" routerLink="city">Weather App</a>
+        <a i18n class="navbar-brand" routerLink="city">Weather App</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-Content"
             aria-controls="navbar-Content" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -10,11 +10,11 @@
         <div class="collapse navbar-collapse" id="navbar-Content">
             <!-- Routing to other Components -->
             <ul class="navbar-nav mr-auto">
-                <li class="nav-item active"><a routerLink="city" class="nav-link"> City </a></li>
-                <li class="nav-item"><a routerLink="coord" class="nav-link"> Coordinates </a></li>
-                <li class="nav-item"><a routerLink="geolocation" class="nav-link"> Geolocation </a></li>
+                <li class="nav-item active"><a i18n routerLink="city" class="nav-link"> City </a></li>
+                <li class="nav-item"><a i18n routerLink="coord" class="nav-link"> Coordinates </a></li>
+                <li class="nav-item"><a i18n routerLink="geolocation" class="nav-link"> Geolocation </a></li>
                 <div ngbDropdown>
-                  <button type="button" class="btn btn-light text-secondary" id="dropdownBasic1" ngbDropdownToggle >Favorites Cities</button>
+                  <button i18n type="button" class="btn btn-light text-secondary" id="dropdownBasic1" ngbDropdownToggle >Favorites Cities</button>
                   <div ngbDropdownMenu aria-labelledby="dropdownBasic1" *ngIf="canDisplayFavoriteButton(this.fc.favoritesCities)">
                     <button ngbDropdownItem *ngFor="let favoriteCity of fc.favoritesCities, let i = index;" (click)="onPickFavCity(favoriteCity)" > {{favoriteCity}}</button>
                   </div>

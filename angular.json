@@ -4,6 +4,12 @@
   "newProjectRoot": "projects",
   "projects": {
     "weather": {
+      "i18n": {
+        "sourceLocale": "en-US",
+        "locales": {
+          "fr": "src/locale/messages.fr.xlf"
+        }
+      },
       "projectType": "application",
       "schematics": {
         "@schematics/angular:application": {
@@ -17,6 +23,9 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "localize": [
+              "fr"
+            ],
             "outputPath": "docs",
             "index": "src/index.html",
             "main": "src/main.ts",

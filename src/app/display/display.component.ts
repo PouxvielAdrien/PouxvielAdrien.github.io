@@ -25,6 +25,8 @@ export class DisplayComponent implements OnInit, OnDestroy {
   weathers:Weather[] | null = null;
   readonly TYPE_OF_FORM = TYPE_OF_FORM;
 
+  desTrans:any;
+
 
   constructor(private ws: WeatherService,
               private http: HttpClient,
@@ -104,7 +106,7 @@ export class DisplayComponent implements OnInit, OnDestroy {
           )
           .subscribe(data => {
             this.currentWeather = data;
-          });
+            });
 
         this.ws.getForecastWeatherWithCityApi(
           this.favCityPicked,

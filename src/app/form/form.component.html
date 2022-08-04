@@ -1,63 +1,62 @@
-<div class="container">
+<div class="container p-3">
   <div class="form-city" >
     <div class="row justify-content-center">
       <div class="col-10 col-lg-8">
-        <!-- Form to get data from the user -->
-        <!-- Data Collected : City Name -->
-        <div class="card text-center m-3">
+        <div class="card text-center shadow m-3">
           <form [formGroup]="weatherForm!" (ngSubmit)="onShowWeather()" class="needs-validation m-1">
+
             <div class="row justify-content-center"  *ngIf="typeOfForm === TYPE_OF_FORM.CITY  || typeOfForm === TYPE_OF_FORM.COORD ">
-              <div class="col-10">
+              <div class="col-6 ">
                 <div class="input-group input-group-lg p-3">
                   <span class="input-group-text" id="inputGroup-sizing-default">
-                    <p *ngIf="typeOfForm === TYPE_OF_FORM.CITY" class="mb-0">City Name</p>
-                    <p *ngIf="typeOfForm === TYPE_OF_FORM.COORD" class="mb-0">Coord</p>
+                    <p i18n *ngIf="typeOfForm === TYPE_OF_FORM.CITY" class="mb-0">City Name </p>
+                    <p i18n *ngIf="typeOfForm === TYPE_OF_FORM.COORD" class="mb-0">Coord</p>
                   </span>
-                  <input id="city" name="city" class="form-control" type="text" formControlName="weatherCity" *ngIf="typeOfForm === TYPE_OF_FORM.CITY"/>
-                  <input id="lat" name="lat" class="form-control" type="text" placeholder="Latitude"
+                  <input i18n id="city" name="city" class="form-control" type="text" formControlName="weatherCity" *ngIf="typeOfForm === TYPE_OF_FORM.CITY"/>
+                  <input i18n id="lat" name="lat" class="form-control" type="text" placeholder="Latitude"
                       formControlName="weatherLat" *ngIf="typeOfForm === TYPE_OF_FORM.COORD"/>
-                  <input id="lon" name="lon" class="form-control" type="text" placeholder="Longitude"
+                  <input i18n id="lon" name="lon" class="form-control" type="text" placeholder="Longitude"
                       formControlName="weatherLon" *ngIf="typeOfForm === TYPE_OF_FORM.COORD"/>
                 </div>
               </div>
             </div>
 
-            <!-- Data Collected : Unit -->
-            <div class="row justify-content-center m-1">
-              <div class="col-4">
-                <div class="form-floating">
-                  <select id="units" class="form-select" name="units" id="floatingUnit"
-                          formControlName="weatherUnit"  bindQueryParam="unit" >
-                    <option value="metric"> metric </option>
-                    <option value="imperial"> imperial </option>
-                  </select>
-                  <label for="floatingUnit">Unit</label>
-                </div>
-              </div>
 
-              <!-- Data Collected : Langage (default = English) -->
-              <div class="col-4">
-                <div class="form-floating">
-                  <select id="langage" class="form-select" id="floatingLang" name="langage"
-                          formControlName="weatherLang">
-                    <option> en </option>
-                    <option> fr </option>
-                  </select>
-                  <label for="floatingLang">Lang</label>
+<!--            <div class="form-group row row-justify-content-center">-->
+<!--              <div class="col">-->
+<!--                <div class="form-check form-check-inline">-->
+<!--                    <input class="form-check-input" type="radio" name="metric" id="metric" value="metric">-->
+<!--                    <label class="form-check-label" for="metric"> Metric</label>-->
+<!--                </div>-->
+<!--              </div>-->
+
+<!--              <div class="col">-->
+<!--                <div class="form-check form-check-inline">-->
+<!--                  <input class="form-check-input" type="radio" name="imperial" id="imperial" value="imperial">-->
+<!--                  <label class="form-check-label" for="imperial"> Imperial</label>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--            </div>-->
+
+            <div class="row justify-content-center m-1">
+                <div class="col-3 mb-2">
+                     <select id="units" class="form-select" name="units"
+                            formControlName="weatherUnit"  bindQueryParam="unit" >
+                      <option i18n value="metric"> metric </option>
+                      <option i18n value="imperial"> imperial </option>
+                    </select>
                 </div>
-              </div>
             </div>
 
-
-            <div class="row justify-content-center">
-              <div class="col-2 m-2">
-                <button type="submit" class="btn btn-primary bg-primary"  [disabled]="weatherForm!.invalid" >
-
+            <div class="row justify-content-center m-1">
+              <div class="col-6">
+                <button type="submit" class="w-100 btn btn-primary bg-primary btn-lg"  [disabled]="weatherForm!.invalid">
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                       class="bi bi-search" viewBox="0 0 16 16">
+                       class="bi bi-search mb-1" viewBox="0 0 16 16">
                     <path
                       d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
                   </svg>
+                  <span i18n> Search</span>
                 </button>
               </div>
             </div>
