@@ -4,13 +4,13 @@
     <div class="row justify-content-between">
 
       <div class="col-2" >
-        <button type="button" class="btn btn-light bg-gradient" (click)="onNewResearch()" *ngIf="typeOfForm !== TYPE_OF_FORM.FAVORITE"> New
+        <button type="button" class="btn btn-light bg-gradient" (click)="onNewResearch()" *ngIf="typeOfForm !== TYPE_OF_FORM.FAVORITE"> <span i18n> New</span>
         </button>
       </div>
 
       <div class="col m-2">
-        <p *ngIf="!isSearching" class="mb-0">Current Weather</p>
-        <p *ngIf="isSearching" class="text-muted">Loading ...</p>
+        <p i18n *ngIf="!isSearching" class="mb-0">Current Weather</p>
+        <p i18n *ngIf="isSearching" class="text-muted">Loading ...</p>
       </div>
 
       <div class="col-2">
@@ -30,19 +30,19 @@
   </div>
 
   <div class="card-body">
-    <h2 class="card-title">{{currentWeather.cityName}}</h2>
+    <h2 i18n class="card-title">{{currentWeather.cityName}}</h2>
 <!--    Todo in Bonus : Use Localized module to manage langages-->
-    <h4 *ngIf="currentWeather.lang === 'en'">Current Weather</h4>
+    <h4 i18n *ngIf="currentWeather.lang === 'en'">Current Weather</h4>
     <h4 *ngIf="currentWeather.lang === 'fr'">Temps Actuel</h4>
-    <h5 >{{currentWeather.tempCurrent  | number: '1.0-0' }}{{currentWeather.getDisplayWeatherUnit()}}</h5>
-    <p class="card-text">{{currentWeather.description}}</p>
+    <h5 i18n>{{currentWeather.tempCurrent  | number: '1.0-0' }}{{currentWeather.getDisplayWeatherUnit()}}</h5>
+    <p i18n class="card-text">{{currentWeather.description}}</p>
     <img alt="weather icon" src="http://openweathermap.org/img/wn/{{currentWeather.icon}}@2x.png" class="img-fluid">
   </div>
 
   <div class="card-group" *ngIf=weathers>
     <div class="card" *ngFor="let day of weathers, let i = index;">
       <div class="card-body">
-        <h5>{{day.date | date : 'shortDate'}}</h5>
+        <h5 i18n>{{day.date | date : 'shortDate'}}</h5>
         <h6> Min : {{day.tempMin | number: '1.0-0'}}</h6>
         <h6> Max : {{day.tempMax | number: '1.0-0'}}</h6>
         <img alt="weather icon" width="100px" height="100px" class="img-fluid" src="http://openweathermap.org/img/wn/{{day.icon}}@2x.png">
